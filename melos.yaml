@@ -1,0 +1,11 @@
+name: fstate
+
+repository: https://github.com/wurikiji/fstate.git
+
+packages:
+  - packages/*
+  - exmaples/*
+
+ide:
+  intellij:
+    enabled: false
