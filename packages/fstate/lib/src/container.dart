@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 
 class FContainerException implements Exception {
   const FContainerException(this.message);
@@ -39,7 +40,7 @@ class FContainer {
     _streams[type]?.add(target);
   }
 
-  final Map<Type, StreamController<Object>> _streams = {};
+  final HashMap<Type, StreamController<Object>> _streams = HashMap();
 
   StreamSubscription<T> listen<T>(
     Type type,
