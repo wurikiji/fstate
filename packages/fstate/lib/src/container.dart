@@ -40,22 +40,29 @@ class _FContainerWithStreamController extends FContainer {
 abstract class FContainer {
   FContainer._();
   factory FContainer() = _FContainerWithStreamController;
-  final Map<Type, dynamic> _store = {};
-  void put(dynamic target) {
-    final type = target.runtimeType;
-    _store[type] = target;
+  final HashMap<Object, dynamic> _store = HashMap();
+  void put(Object value) {
+    final key = value.runtimeType;
+    _store[key] = value;
   }
 
-  T get<T>([Type? type]) {
-    try {
-      return _store[type ?? T];
-    } catch (e) {
-      throw FContainerException('You should [put] type "$type" first.');
+  T get<T>([Type? key]) {
+    if (!_contains(key ?? T)) {
+      throw FContainerException('You should [put] type "${key ?? T}" first.');
     }
+    return _store[key ?? T];
+  }
+
+  void delete<T>([Type? key]) {
+    _store.remove(key ?? T);
   }
 
   StreamSubscription<T> listen<T>(
     Type type,
     void Function(T nextValue) callback,
   );
+
+  bool _contains(Object key) {
+    return _store.containsKey(key);
+  }
 }

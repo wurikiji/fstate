@@ -92,5 +92,13 @@ void main() {
         container.put(second);
       }
     });
+
+    test('can delete items', () {
+      const value = 10;
+      container.put(value);
+      final type = value.runtimeType;
+      container.delete(type);
+      expect(() => container.get(type), throwsA(isA<FContainerException>()));
+    });
   });
 }
