@@ -1,3 +1,4 @@
+// coverage:ignore-file
 const register = _Register();
 const constructor = _Constructor();
 const injector = _Injector();

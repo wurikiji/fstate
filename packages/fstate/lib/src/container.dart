@@ -4,10 +4,13 @@ import 'dart:collection';
 class FContainerException implements Exception {
   const FContainerException(this.message);
   final String message;
+
+  // coverage:ignore-start
   @override
   String toString() {
     return 'FContainer throws: $message';
   }
+  // coverage:ignore-end
 }
 
 class _FContainerWithStreamController extends FContainer {
