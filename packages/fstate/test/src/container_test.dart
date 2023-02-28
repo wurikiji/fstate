@@ -67,6 +67,7 @@ void main() {
         container.register(first);
         final callback = createCallback(second);
         container.listen(first.runtimeType, callback);
+        // intentionally register two times to test if all listeners are called.
         final callback2 = createCallback(second);
         container.listen(first.runtimeType, callback2);
       }
