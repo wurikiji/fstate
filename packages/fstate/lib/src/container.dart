@@ -47,7 +47,11 @@ abstract class FContainer {
   }
 
   T get<T>([Type? type]) {
-    return _store[type ?? T];
+    try {
+      return _store[type ?? T];
+    } catch (e) {
+      throw FContainerException('You should [put] type "$type" first.');
+    }
   }
 
   StreamSubscription<T> listen<T>(

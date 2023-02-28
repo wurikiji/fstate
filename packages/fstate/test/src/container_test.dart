@@ -30,6 +30,10 @@ void main() {
       expect(updated, 1);
     });
 
+    test('should throw on getting non-registered type', () {
+      expect(() => container.get<int>(), throwsA(isA<FContainerException>()));
+    });
+
     test('can notify all listeners when update the target type', () {
       void Function(T next) createCallback<T>(T target) {
         return expectAsync1((T nextValue) {
