@@ -1,0 +1,22 @@
+name: fstate_generator
+description: A starting point for Dart libraries or applications.
+version: 0.1.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ">=2.19.2 <3.0.0"
+
+dependencies:
+  analyzer: ^5.6.0
+  build: ^2.3.1
+  code_builder: ^4.4.0
+  source_gen: ^1.2.7
+  fstate: ">=0.1.0 <1.0.0"
+  build_config: ^1.1.1
+  path: ^1.8.3
+
+dev_dependencies:
+  build_runner: ^2.3.3
+  build_test: ^2.1.6
+  lints: ^2.0.0
+  test: ^1.23.1

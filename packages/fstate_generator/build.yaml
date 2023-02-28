@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      core_generator:
+        enabled: true
+
+builders:
+  core_generator:
+    import: "package:fstate_generator/core_builder.dart"
+    builder_factories:
+      - "coreBuilder"
+    build_extensions: { ".dart": [".fstate.g.dart"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: [source_gen:combining_builder]
