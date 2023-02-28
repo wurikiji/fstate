@@ -13,7 +13,7 @@ void main() {
     test('can register anything', () async {
       final deps = [10, 'string', 1.1, Dummy()];
       for (final dep in deps) {
-        container.register(dep);
+        container.put(dep);
       }
 
       for (final dep in deps) {
@@ -23,28 +23,11 @@ void main() {
       }
     });
 
-    test('can not register multiple times', () {
-      container.register(10);
-      void reRegister() {
-        container.register(1);
-      }
-
-      expect(reRegister, throwsA(isA<FContainerException>()));
-    });
-
     test('can update registered type', () {
-      container.register(10);
-      container.update(1);
+      container.put(10);
+      container.put(1);
       final int updated = container.find();
       expect(updated, 1);
-    });
-
-    test('can not update non-registered type', () {
-      void updateNonRegistered() {
-        container.update(10);
-      }
-
-      expect(updateNonRegistered, throwsA(isA<FContainerException>()));
     });
 
     test('can notify all listeners when update the target type', () {
@@ -64,7 +47,7 @@ void main() {
       for (final ex in examples) {
         final first = ex[0];
         final second = ex[1];
-        container.register(first);
+        container.put(first);
         final callback = createCallback(second);
         container.listen(first.runtimeType, callback);
         // intentionally register two times to test if all listeners are called.
@@ -74,7 +57,7 @@ void main() {
 
       for (final ex in examples) {
         final second = ex[1];
-        container.update(second);
+        container.put(second);
       }
     });
     test('should not notify when the listener cancels the subscription', () {
@@ -94,7 +77,7 @@ void main() {
       for (final ex in examples) {
         final first = ex[0];
         final second = ex[1];
-        container.register(first);
+        container.put(first);
         final callback = createCallback(second);
         final subs = container.listen(first.runtimeType, callback);
         subs.cancel();
@@ -102,7 +85,7 @@ void main() {
 
       for (final ex in examples) {
         final second = ex[1];
-        container.update(second);
+        container.put(second);
       }
     });
   });

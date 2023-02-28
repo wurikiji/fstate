@@ -16,8 +16,8 @@ class _FContainerWithStreamController extends FContainer {
   final HashMap<Type, StreamController<Object>> _streams = HashMap();
 
   @override
-  void update(target) {
-    super.update(target);
+  void put(target) {
+    super.put(target);
     _notifyListeners(target);
   }
 
@@ -41,34 +41,13 @@ abstract class FContainer {
   FContainer._();
   factory FContainer() = _FContainerWithStreamController;
   final Map<Type, dynamic> _store = {};
-  void register(dynamic target) {
+  void put(dynamic target) {
     final type = target.runtimeType;
-    if (_isRegistered(type)) {
-      throw FContainerException(
-        'Type [$type] is already registered.'
-        ' Use [update] to overwrite type [$type].',
-      );
-    }
     _store[type] = target;
   }
 
   T find<T>([Type? type]) {
     return _store[type ?? T];
-  }
-
-  void update(dynamic target) {
-    final type = target.runtimeType;
-    if (!_isRegistered(type)) {
-      throw FContainerException(
-        'Type [$type] is not registered yet.'
-        'You shoulde call [register] first.',
-      );
-    }
-    _store[type] = target;
-  }
-
-  bool _isRegistered(Type type) {
-    return _store.containsKey(type);
   }
 
   StreamSubscription<T> listen<T>(
