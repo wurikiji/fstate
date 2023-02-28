@@ -78,10 +78,8 @@ void main() {
     });
     test('should not notify when the listener cancels the subscription', () {
       void Function(T next) createCallback<T>(T target) {
-        int count = 0;
         return (T nextValue) {
-          count++;
-          expect(count, equals(0));
+          fail('Notification callback should not be called reach here');
         };
       }
 
