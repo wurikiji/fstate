@@ -1,38 +1,4 @@
-class From {
-  const From(this.dependsOn);
-  final dynamic dependsOn;
-}
-
-class Register {
-  const Register();
-}
-
-class Constructor {
-  const Constructor();
-}
-
-class Default<T> {
-  const Default(this.value);
-  final T value;
-}
-
-class Inject {
-  const Inject();
-}
-
-class FContainer {
-  T find<T>() {
-    final stored = _store[T];
-    if (stored == null) {
-      throw 'You did not register $T';
-    }
-    return stored;
-  }
-
-  final Map<Type, dynamic> _store = {
-    WantToInject: WantToInject('hello'),
-  };
-}
+import 'package:fstate/fstate.dart';
 
 final fc = FContainer();
 
@@ -60,7 +26,7 @@ class _WiredTestTarget implements TestTarget {
   }
 }
 
-@Register()
+@register
 class WantToInject {
   @Default('hello')
   final String name;
@@ -75,7 +41,7 @@ String getName(WantToInject a) {
 class TestTarget {
   const TestTarget(this.name, this.wantToInject);
 
-  @Inject()
+  @injector
   factory TestTarget.wired() = _WiredTestTarget;
 
   @From(WantToInject)
