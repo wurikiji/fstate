@@ -1,3 +1,4 @@
+@Timeout(Duration(milliseconds: 1000))
 import 'package:fstate/src/container.dart';
 import 'package:test/test.dart';
 
@@ -24,7 +25,11 @@ void main() {
 
     test('can not register multiple times', () {
       container.register(10);
-      expect(() => container.register(1), throwsA(isA<FContainerException>()));
+      void reRegister() {
+        container.register(1);
+      }
+
+      expect(reRegister, throwsA(isA<FContainerException>()));
     });
 
     test('can update registered type', () {
@@ -40,6 +45,66 @@ void main() {
       }
 
       expect(updateNonRegistered, throwsA(isA<FContainerException>()));
+    });
+
+    test('can notify all listeners when update the target type', () {
+      void Function(T next) createCallback<T>(T target) {
+        return expectAsync1((T nextValue) {
+          expect(nextValue, equals(target));
+        });
+      }
+
+      final examples = [
+        [1, 2],
+        [1.1, 2.2],
+        ['hello', 'hi'],
+        [Dummy(), Dummy()]
+      ];
+
+      for (final ex in examples) {
+        final first = ex[0];
+        final second = ex[1];
+        container.register(first);
+        final callback = createCallback(second);
+        container.listen(first.runtimeType, callback);
+        final callback2 = createCallback(second);
+        container.listen(first.runtimeType, callback2);
+      }
+
+      for (final ex in examples) {
+        final second = ex[1];
+        container.update(second);
+      }
+    });
+    test('should not notify when the listener cancels the subscription', () {
+      void Function(T next) createCallback<T>(T target) {
+        int count = 0;
+        return (T nextValue) {
+          count++;
+          expect(count, equals(0));
+        };
+      }
+
+      final examples = [
+        [1, 2],
+        [1.1, 2.2],
+        ['hello', 'hi'],
+        [Dummy(), Dummy()]
+      ];
+
+      for (final ex in examples) {
+        final first = ex[0];
+        final second = ex[1];
+        container.register(first);
+        final callback = createCallback(second);
+        final subs = container.listen(first.runtimeType, callback);
+        subs.cancel();
+      }
+
+      for (final ex in examples) {
+        final second = ex[1];
+        container.update(second);
+      }
     });
   });
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class FContainerException implements Exception {
   const FContainerException(this.message);
   final String message;
@@ -18,6 +20,7 @@ class FContainer {
       );
     }
     _store[type] = target;
+    _streams[type] = StreamController<Object>.broadcast();
   }
 
   T find<T>([Type? type]) {
@@ -33,5 +36,16 @@ class FContainer {
       );
     }
     _store[type] = target;
+    _streams[type]?.add(target);
+  }
+
+  final Map<Type, StreamController<Object>> _streams = {};
+
+  StreamSubscription<T> listen<T>(
+    Type type,
+    void Function(T nextValue) callback,
+  ) {
+    return (_streams[type]!.stream.listen(callback as void Function(Object))
+        as StreamSubscription<T>);
   }
 }
