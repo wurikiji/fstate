@@ -16,25 +16,24 @@ class FContainerException implements Exception {
 class _FContainerWithStreamController extends FContainer {
   _FContainerWithStreamController() : super._();
 
-  final HashMap<Type, StreamController<Object>> _streams = HashMap();
+  final HashMap<Object, StreamController<Object>> _streams = HashMap();
 
   @override
-  void put(target) {
-    super.put(target);
-    _notifyListeners(target);
+  void put<T>(key, value) {
+    super.put(key, value);
+    _notifyListeners(key);
   }
 
-  void _notifyListeners(dynamic target) {
-    final type = target.runtimeType;
-    _streams[type]?.add(target);
+  void _notifyListeners(Object key) {
+    _streams[key]?.add(get(key));
   }
 
   @override
   StreamSubscription<T> listen<T>(
-    Type type,
+    Object key,
     void Function(T nextValue) callback,
   ) {
-    final controller = _streams[type] ??= StreamController<Object>.broadcast();
+    final controller = _streams[key] ??= StreamController<Object>.broadcast();
     return (controller.stream.listen(callback as void Function(Object))
         as StreamSubscription<T>);
   }
@@ -44,24 +43,23 @@ abstract class FContainer {
   FContainer._();
   factory FContainer() = _FContainerWithStreamController;
   final HashMap<Object, dynamic> _store = HashMap();
-  void put(Object value) {
-    final key = value.runtimeType;
+  void put<T>(Object key, T value) {
     _store[key] = value;
   }
 
-  T get<T>([Type? key]) {
-    if (!_contains(key ?? T)) {
-      throw FContainerException('You should [put] type "${key ?? T}" first.');
+  T get<T>(Object key) {
+    if (!_contains(key)) {
+      throw FContainerException('You should [put] type "$key " first.');
     }
-    return _store[key ?? T];
+    return _store[key] as T;
   }
 
-  void delete<T>([Type? key]) {
-    _store.remove(key ?? T);
+  void delete<T>(Object key) {
+    _store.remove(key);
   }
 
   StreamSubscription<T> listen<T>(
-    Type type,
+    Object key,
     void Function(T nextValue) callback,
   );
 

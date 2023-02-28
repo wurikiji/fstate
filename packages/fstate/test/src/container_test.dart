@@ -10,10 +10,10 @@ void main() {
     setUp(() {
       container = FContainer();
     });
-    test('can register anything', () async {
+    test('can put anything', () async {
       final deps = [10, 'string', 1.1, Dummy()];
       for (final dep in deps) {
-        container.put(dep);
+        container.put(dep.runtimeType, dep);
       }
 
       for (final dep in deps) {
@@ -23,18 +23,22 @@ void main() {
       }
     });
 
-    test('can update registered type', () {
-      container.put(10);
-      container.put(1);
-      final int updated = container.get();
+    test('can update value', () {
+      const key = 'key';
+      container.put(key, 10);
+      container.put(key, 1);
+      final int updated = container.get(key);
       expect(updated, 1);
     });
 
-    test('should throw on getting non-registered type', () {
-      expect(() => container.get<int>(), throwsA(isA<FContainerException>()));
+    test('should throw on getting non-registered key', () {
+      expect(
+        () => container.get('nothing'),
+        throwsA(isA<FContainerException>()),
+      );
     });
 
-    test('can notify all listeners when update the target type', () {
+    test('can notify all listeners when update the target key', () {
       void Function(T next) createCallback<T>(T target) {
         return expectAsync1((T nextValue) {
           expect(nextValue, equals(target));
@@ -42,26 +46,28 @@ void main() {
       }
 
       final examples = [
-        [1, 2],
-        [1.1, 2.2],
-        ['hello', 'hi'],
-        [Dummy(), Dummy()]
+        ['first', 1, 2],
+        ['second', 1.1, 2.2],
+        ['third', 'hello', 'hi'],
+        ['fourth', Dummy(), Dummy()]
       ];
 
       for (final ex in examples) {
-        final first = ex[0];
-        final second = ex[1];
-        container.put(first);
+        final key = ex[0];
+        final first = ex[1];
+        final second = ex[2];
+        container.put(key, first);
         final callback = createCallback(second);
-        container.listen(first.runtimeType, callback);
+        container.listen(key, callback);
         // intentionally register two times to test if all listeners are called.
         final callback2 = createCallback(second);
-        container.listen(first.runtimeType, callback2);
+        container.listen(key, callback2);
       }
 
       for (final ex in examples) {
-        final second = ex[1];
-        container.put(second);
+        final key = ex[0];
+        final second = ex[2];
+        container.put(key, second);
       }
     });
     test('should not notify when the listener cancels the subscription', () {
@@ -72,33 +78,34 @@ void main() {
       }
 
       final examples = [
-        [1, 2],
-        [1.1, 2.2],
-        ['hello', 'hi'],
-        [Dummy(), Dummy()]
+        ['first', 1, 2],
+        ['second', 1.1, 2.2],
+        ['third', 'hello', 'hi'],
+        ['fourth', Dummy(), Dummy()]
       ];
 
       for (final ex in examples) {
-        final first = ex[0];
-        final second = ex[1];
-        container.put(first);
+        final key = ex[0];
+        final first = ex[1];
+        final second = ex[2];
+        container.put(key, first);
         final callback = createCallback(second);
-        final subs = container.listen(first.runtimeType, callback);
+        final subs = container.listen(key, callback);
         subs.cancel();
       }
 
       for (final ex in examples) {
-        final second = ex[1];
-        container.put(second);
+        final key = ex[0];
+        final second = ex[2];
+        container.put(key, second);
       }
     });
 
     test('can delete items', () {
       const value = 10;
-      container.put(value);
-      final type = value.runtimeType;
-      container.delete(type);
-      expect(() => container.get(type), throwsA(isA<FContainerException>()));
+      container.put('key', value);
+      container.delete('key');
+      expect(() => container.get('key'), throwsA(isA<FContainerException>()));
     });
   });
 }
