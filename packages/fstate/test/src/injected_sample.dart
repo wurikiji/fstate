@@ -26,9 +26,9 @@ class _WiredTestTarget implements TestTarget {
   }
 }
 
-@register
+@fstate
 class WantToInject {
-  @Default('hello')
+  @Inject('hello')
   final String name;
 
   WantToInject(this.name);
@@ -41,13 +41,13 @@ String getName(WantToInject a) {
 class TestTarget {
   const TestTarget(this.name, this.wantToInject);
 
-  @injector
+  @generated
   factory TestTarget.wired() = _WiredTestTarget;
 
-  @From(WantToInject)
+  @Inject(WantToInject)
   final WantToInject wantToInject;
 
-  @From(getName)
+  @Inject(getName)
   final String name;
 
   hello() {

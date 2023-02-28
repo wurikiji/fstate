@@ -1,31 +1,31 @@
 // coverage:ignore-file
-const register = _Register();
-const constructor = _Constructor();
-const injector = _Injector();
+const fstate = FState();
+const generated = FStateConstructor();
+const base = BaseConstructor();
 const notify = Notify();
 
-class From {
-  const From(this.dependsOn);
-  final dynamic dependsOn;
+/// Annotation to inject dependency.
+class Inject {
+  const Inject(this.from);
+  final dynamic from;
 }
 
-class _Register {
-  const _Register();
-}
-
-class _Constructor {
-  const _Constructor();
-}
-
-class _Injector {
-  const _Injector();
-}
-
-class Default<T> {
-  const Default(this.value);
-  final T value;
-}
-
+/// Annotate method as a state changer.
 class Notify {
   const Notify();
+}
+
+/// Annotate class to register it.
+class FState {
+  const FState();
+}
+
+/// Annotation to mark the constructor as base constructor.
+class BaseConstructor {
+  const BaseConstructor();
+}
+
+/// Annotation for auto generated constructor.
+class FStateConstructor {
+  const FStateConstructor();
 }
