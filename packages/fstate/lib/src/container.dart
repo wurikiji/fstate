@@ -46,7 +46,7 @@ abstract class FContainer {
     _store[type] = target;
   }
 
-  T find<T>([Type? type]) {
+  T get<T>([Type? type]) {
     return _store[type ?? T];
   }
 

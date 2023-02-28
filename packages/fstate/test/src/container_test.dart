@@ -18,7 +18,7 @@ void main() {
 
       for (final dep in deps) {
         final type = dep.runtimeType;
-        final found = container.find(type);
+        final found = container.get(type);
         expect(found, dep);
       }
     });
@@ -26,7 +26,7 @@ void main() {
     test('can update registered type', () {
       container.put(10);
       container.put(1);
-      final int updated = container.find();
+      final int updated = container.get();
       expect(updated, 1);
     });
 

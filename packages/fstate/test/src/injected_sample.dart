@@ -5,13 +5,13 @@ final fc = FContainer();
 class _WiredTestTarget implements TestTarget {
   @override
   String get name {
-    final WantToInject dep1 = fc.find();
+    final WantToInject dep1 = fc.get();
     return getName(dep1);
   }
 
   @override
   WantToInject get wantToInject {
-    return fc.find();
+    return fc.get();
   }
 
   _WiredTestTarget();
