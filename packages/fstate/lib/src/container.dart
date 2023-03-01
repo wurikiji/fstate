@@ -5,20 +5,9 @@ class FstateContainerException implements Exception {
   const FstateContainerException(this.message);
   final String message;
 
-  // coverage:ignore-start
   @override
   String toString() {
     return 'FstateContainer throws: $message';
-  }
-  // coverage:ignore-end
-
-  @override
-  int get hashCode => message.hashCode;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other is FstateContainerException && other.message == message);
   }
 }
 

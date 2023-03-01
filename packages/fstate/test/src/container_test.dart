@@ -37,7 +37,7 @@ void main() {
         throwsA(
           predicate(
             (FstateContainerException p0) =>
-                p0.message.contains('You should [put] key "$key" first.'),
+                p0.toString().contains('You should [put] key "$key" first.'),
             'message contains: You should [put] key "$key" first.',
           ),
         ),
@@ -117,7 +117,7 @@ void main() {
         throwsA(
           predicate(
             (FstateContainerException p0) =>
-                p0.message.contains('You should [put] key "$key" first.'),
+                p0.toString().contains('You should [put] key "$key" first.'),
             'message contains: You should [put] key "$key" first.',
           ),
         ),
