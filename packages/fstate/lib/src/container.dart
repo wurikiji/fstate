@@ -1,20 +1,29 @@
 import 'dart:async';
 import 'dart:collection';
 
-class FContainerException implements Exception {
-  const FContainerException(this.message);
+class FstateContainerException implements Exception {
+  const FstateContainerException(this.message);
   final String message;
 
   // coverage:ignore-start
   @override
   String toString() {
-    return 'FContainer throws: $message';
+    return 'FstateContainer throws: $message';
   }
   // coverage:ignore-end
+
+  @override
+  int get hashCode => message.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is FstateContainerException && other.message == message);
+  }
 }
 
-class _FContainerWithStreamController extends FContainer {
-  _FContainerWithStreamController() : super._();
+class _FstateContainerWithStreamController extends FstateContainer {
+  _FstateContainerWithStreamController() : super._();
 
   final HashMap<Object, StreamController<Object>> _streams = HashMap();
 
@@ -39,17 +48,17 @@ class _FContainerWithStreamController extends FContainer {
   }
 }
 
-abstract class FContainer {
-  FContainer._();
-  factory FContainer() = _FContainerWithStreamController;
+abstract class FstateContainer {
+  FstateContainer._();
+  factory FstateContainer() = _FstateContainerWithStreamController;
   final HashMap<Object, dynamic> _store = HashMap();
   void put<T>(Object key, T value) {
     _store[key] = value;
   }
 
   T get<T>(Object key) {
-    if (!_contains(key)) {
-      throw FContainerException('You should [put] type "$key " first.');
+    if (!contains(key)) {
+      throw FstateContainerException('You should [put] key "$key" first.');
     }
     return _store[key] as T;
   }
@@ -63,7 +72,7 @@ abstract class FContainer {
     void Function(T nextValue) callback,
   );
 
-  bool _contains(Object key) {
+  bool contains(Object key) {
     return _store.containsKey(key);
   }
 }

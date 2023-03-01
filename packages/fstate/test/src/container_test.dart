@@ -1,4 +1,3 @@
-@Timeout(Duration(milliseconds: 1000))
 import 'package:fstate/src/container.dart';
 import 'package:test/test.dart';
 
@@ -6,9 +5,9 @@ class Dummy {}
 
 void main() {
   group('FContainer', () {
-    late FContainer container;
+    late FstateContainer container;
     setUp(() {
-      container = FContainer();
+      container = FstateContainer();
     });
     test('can put anything', () async {
       final deps = [10, 'string', 1.1, Dummy()];
@@ -32,9 +31,16 @@ void main() {
     });
 
     test('should throw on getting non-registered key', () {
+      const key = 'nothing';
       expect(
-        () => container.get('nothing'),
-        throwsA(isA<FContainerException>()),
+        () => container.get(key),
+        throwsA(
+          predicate(
+            (FstateContainerException p0) =>
+                p0.message.contains('You should [put] key "$key" first.'),
+            'message contains: You should [put] key "$key" first.',
+          ),
+        ),
       );
     });
 
@@ -103,9 +109,27 @@ void main() {
 
     test('can delete items', () {
       const value = 10;
-      container.put('key', value);
-      container.delete('key');
-      expect(() => container.get('key'), throwsA(isA<FContainerException>()));
+      const key = 'key';
+      container.put(key, value);
+      container.delete(key);
+      expect(
+        () => container.get(key),
+        throwsA(
+          predicate(
+            (FstateContainerException p0) =>
+                p0.message.contains('You should [put] key "$key" first.'),
+            'message contains: You should [put] key "$key" first.',
+          ),
+        ),
+      );
+    });
+
+    test('can check if it contains the key', () {
+      const key = 'key';
+      container.put(key, 10);
+      expect(container.contains(key), isTrue);
+      container.delete(key);
+      expect(container.contains(key), isFalse);
     });
   });
 }

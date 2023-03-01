@@ -8,5 +8,5 @@ gsed -i 's/{}/{ test("", () => null); }/' test/full_coverage_test.dart
 
 
 dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage &&
-  genhtml -o ./coverage/html ./coverage/lcov.info &&
+  genhtml -q -o ./coverage/html ./coverage/lcov.info &&
   lcov --list coverage/lcov.info
