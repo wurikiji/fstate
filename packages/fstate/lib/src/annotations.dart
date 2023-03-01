@@ -7,6 +7,9 @@ class Fstate {
 }
 
 /// Annotate widget to implement it.
+class Fwidget {
+  const Fwidget();
+}
 
 /// Annotation to inject dependency.
 class Inject {

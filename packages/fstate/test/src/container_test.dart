@@ -39,13 +39,7 @@ void main() {
       );
     });
 
-    test('can notify all listeners when update the target key', () {
-      void Function(T next) createCallback<T>(T target) {
-        return expectAsync1((T nextValue) {
-          expect(nextValue, equals(target));
-        });
-      }
-
+    test('can get stream of data', () {
       final examples = [
         ['first', 1, 2],
         ['second', 1.1, 2.2],
@@ -58,41 +52,8 @@ void main() {
         final first = ex[1];
         final second = ex[2];
         container.put(key, first);
-        final callback = createCallback(second);
-        container.listen(key, callback);
-        // intentionally register two times to test if all listeners are called.
-        final callback2 = createCallback(second);
-        container.listen(key, callback2);
-      }
-
-      for (final ex in examples) {
-        final key = ex[0];
-        final second = ex[2];
-        container.put(key, second);
-      }
-    });
-    test('should not notify when the listener cancels the subscription', () {
-      void Function(T next) createCallback<T>(T target) {
-        return (T nextValue) {
-          fail('Notification callback should not be called reach here');
-        };
-      }
-
-      final examples = [
-        ['first', 1, 2],
-        ['second', 1.1, 2.2],
-        ['third', 'hello', 'hi'],
-        ['fourth', Dummy(), Dummy()]
-      ];
-
-      for (final ex in examples) {
-        final key = ex[0];
-        final first = ex[1];
-        final second = ex[2];
-        container.put(key, first);
-        final callback = createCallback(second);
-        final subs = container.listen(key, callback);
-        subs.cancel();
+        final Stream stream = container.stream(key);
+        expect(stream, emits(second));
       }
 
       for (final ex in examples) {
