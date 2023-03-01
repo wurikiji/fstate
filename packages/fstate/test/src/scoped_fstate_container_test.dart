@@ -1,36 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fstate/flutter_fstate.dart';
-import 'package:flutter_fstate/src/scoped_fstate_container.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fstate/fstate.dart';
 
 void main() {
-  group('ScopedFstateContainer', () {
-    late Widget sut;
-    late FstateContainer container;
-    const Key key = ValueKey('sut');
-
-    setUp(() {
-      container = FstateContainer();
-      sut = ScopedFstateContainer(
-        container: container,
-        child: Container(key: key),
-      );
-    });
-    testWidgets('can pass FstateContainer', (tester) async {
-      await tester.pumpWidget(sut);
-      final finder = find.byKey(key);
-      final containerElement = tester.element(finder);
-
-      expect(() {
-        final scoped = containerElement
-            .dependOnInheritedWidgetOfExactType<ScopedFstateContainer>()!;
-        final container = scoped.container;
-
-        expect(container, isNotNull);
-      }, isNot(throwsA(anything)));
-    });
-  });
-
   group('FstateScope', () {
     late Widget sut;
     const Key key = ValueKey('sut');
@@ -47,9 +19,7 @@ void main() {
       final containerElement = tester.element(finder);
 
       expect(() {
-        final scoped = containerElement
-            .dependOnInheritedWidgetOfExactType<ScopedFstateContainer>()!;
-        final container = scoped.container;
+        final container = FstateScope.containerOf(containerElement);
 
         expect(container, isNotNull);
       }, isNot(throwsA(anything)));
@@ -62,18 +32,13 @@ void main() {
 
         final finder = find.byKey(key);
         final containerElement = tester.element(finder);
-
-        final scoped = containerElement
-            .dependOnInheritedWidgetOfExactType<ScopedFstateContainer>()!;
-        final container = scoped.container;
+        final container = FstateScope.containerOf(containerElement);
 
         // same effect with rebuild parent
         await tester.pumpWidget(sut);
 
         final containerElement2 = tester.element(finder);
-        final scoped2 = containerElement2
-            .dependOnInheritedWidgetOfExactType<ScopedFstateContainer>()!;
-        final container2 = scoped2.container;
+        final container2 = FstateScope.containerOf(containerElement2);
 
         expect(container, equals(container2));
       },
@@ -94,22 +59,35 @@ void main() {
 
         final finder = find.byKey(key);
         final containerElement = tester.element(finder);
-
-        final scoped = containerElement
-            .dependOnInheritedWidgetOfExactType<ScopedFstateContainer>()!;
-        final container = scoped.container;
+        final container = FstateScope.containerOf(containerElement);
 
         // same effect with rebuild parent
         setState(() {});
         await tester.pumpAndSettle();
 
         final containerElement2 = tester.element(finder);
-        final scoped2 = containerElement2
-            .dependOnInheritedWidgetOfExactType<ScopedFstateContainer>()!;
-        final container2 = scoped2.container;
+        final container2 = FstateScope.containerOf(containerElement2);
 
         expect(container, equals(container2));
       },
     );
+
+    testWidgets("should throw when it's not used", (tester) async {
+      await tester.pumpWidget(Container());
+      final container = find.byType(Container);
+      final element = tester.element(container);
+      expect(() {
+        FstateScope.containerOf(element);
+        fail('should throw before this line');
+      }, throwsA(
+        predicate((
+          FstateScopeException e,
+        ) {
+          return e
+              .toString()
+              .contains('You should wrap your widget with FstateScope');
+        }),
+      ));
+    });
   });
 }

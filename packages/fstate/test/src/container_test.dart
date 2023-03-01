@@ -1,5 +1,5 @@
-import 'package:fstate/src/container.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fstate/fstate.dart';
 
 class Dummy {}
 

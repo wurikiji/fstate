@@ -1,4 +1,5 @@
 library fstate;
 
-export 'src/annotations.dart';
-export 'src/container.dart';
+export 'src/foundation/annotations.dart';
+export 'src/foundation/container.dart';
+export 'src/widgets/scoped_fstate_container.dart';
