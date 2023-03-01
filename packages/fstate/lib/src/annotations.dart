@@ -6,6 +6,8 @@ class Fstate {
   const Fstate();
 }
 
+/// Annotate widget to implement it.
+
 /// Annotation to inject dependency.
 class Inject {
   const Inject({this.from});

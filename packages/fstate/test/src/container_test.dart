@@ -32,15 +32,10 @@ void main() {
 
     test('should throw on getting non-registered key', () {
       const key = 'nothing';
+      final data = container.get(key);
       expect(
-        () => container.get(key),
-        throwsA(
-          predicate(
-            (FstateContainerException p0) =>
-                p0.toString().contains('You should [put] key "$key" first.'),
-            'message contains: You should [put] key "$key" first.',
-          ),
-        ),
+        data,
+        isNull,
       );
     });
 
@@ -112,15 +107,10 @@ void main() {
       const key = 'key';
       container.put(key, value);
       container.delete(key);
+      final data = container.get(key);
       expect(
-        () => container.get(key),
-        throwsA(
-          predicate(
-            (FstateContainerException p0) =>
-                p0.toString().contains('You should [put] key "$key" first.'),
-            'message contains: You should [put] key "$key" first.',
-          ),
-        ),
+        data,
+        isNull,
       );
     });
 

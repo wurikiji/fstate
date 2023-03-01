@@ -1,16 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-class FstateContainerException implements Exception {
-  const FstateContainerException(this.message);
-  final String message;
-
-  @override
-  String toString() {
-    return 'FstateContainer throws: $message';
-  }
-}
-
 class _FstateContainerWithStreamController extends FstateContainer {
   _FstateContainerWithStreamController() : super._();
 
@@ -45,11 +35,8 @@ abstract class FstateContainer {
     _store[key] = value;
   }
 
-  T get<T>(Object key) {
-    if (!contains(key)) {
-      throw FstateContainerException('You should [put] key "$key" first.');
-    }
-    return _store[key] as T;
+  T? get<T>(Object key) {
+    return _store[key] as T?;
   }
 
   void delete<T>(Object key) {
