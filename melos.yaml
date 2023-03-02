@@ -6,6 +6,10 @@ packages:
   - packages/*
   - exmaples/*
 
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
 ide:
   intellij:
     enabled: false
