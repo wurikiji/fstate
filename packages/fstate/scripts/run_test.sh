@@ -7,6 +7,6 @@ gsed -i 's/{}/{ test("", () => null); }/' test/full_coverage_test.dart
 ## end set up full test coverage
 
 
-flutter test --coverage &&
+flutter test --coverage --branch-coverage --coverage-path=coverage/lcov.info &&
   genhtml -q -o ./coverage/html ./coverage/lcov.info &&
   lcov --list coverage/lcov.info
