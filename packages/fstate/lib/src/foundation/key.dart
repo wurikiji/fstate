@@ -59,14 +59,14 @@ bool areTwoListsSame(List<dynamic> list1, List<dynamic> list2) {
 class FstateKeyFamily<T> {
   const FstateKeyFamily();
 
-  @override
-  noSuchMethod(Invocation invocation) {
-    final positionalParams = invocation.positionalArguments;
-    final namedParams = invocation.namedArguments;
+  FstateKey<T> buildKey(
+    List<dynamic> positionalArguments,
+    Map<Symbol, dynamic> namedArguments,
+  ) {
     return Function.apply(
       FstateKey<T>.new,
-      positionalParams,
-      namedParams,
+      positionalArguments,
+      namedArguments,
     );
   }
 }

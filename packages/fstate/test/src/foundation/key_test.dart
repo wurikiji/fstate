@@ -81,14 +81,13 @@ class OnePositionalArgumentFamily<T> extends FstateKeyFamily<T> {
   final Function _builder;
 
   FstateKey<T> call({required int i}) {
-    return noSuchMethod(Invocation.method(
-      #fstate,
+    return buildKey(
       [],
       {
         #builder: _builder,
         #namedInputs: {#i: i},
       },
-    ));
+    );
   }
 }
 
@@ -99,14 +98,13 @@ class OneArgumentFamily<T> extends FstateKeyFamily<T> {
   final Function _builder;
 
   FstateKey<T> call(int i) {
-    return noSuchMethod(Invocation.method(
-      #fstate,
+    return buildKey(
       [],
       {
         #builder: _builder,
         #positionalInputs: [i],
       },
-    ));
+    );
   }
 }
 
@@ -118,6 +116,6 @@ class NoParamFstateKeyFamily<T> extends FstateKeyFamily<T> {
   final Function _builder;
 
   FstateKey<T> call() {
-    return noSuchMethod(Invocation.method(#fstate, [], {#builder: _builder}));
+    return buildKey([], {#builder: _builder});
   }
 }
