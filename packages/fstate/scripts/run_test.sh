@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ## begin set up full test coverage
+dart pub global activate full_coverage
 dart pub global run full_coverage
 echo "import 'package:flutter_test/flutter_test.dart';" | cat - test/full_coverage_test.dart > temp && mv temp test/full_coverage_test.dart
 gsed -i 's/{}/{ test("", () => null); }/' test/full_coverage_test.dart
