@@ -55,3 +55,18 @@ bool areTwoListsSame(List<dynamic> list1, List<dynamic> list2) {
   }
   return true;
 }
+
+class FstateKeyFamily<T> {
+  const FstateKeyFamily();
+
+  @override
+  noSuchMethod(Invocation invocation) {
+    final positionalParams = invocation.positionalArguments;
+    final namedParams = invocation.namedArguments;
+    return Function.apply(
+      FstateKey<T>.new,
+      positionalParams,
+      namedParams,
+    );
+  }
+}

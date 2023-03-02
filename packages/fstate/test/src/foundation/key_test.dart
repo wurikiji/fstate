@@ -14,6 +14,20 @@ void main() {
       final value = key.build(container);
       expect(value, equals(1));
     });
+    test("is same with same params", () {
+      builder() => 1;
+      final key1 = FstateKey<int>(
+        builder: builder,
+        namedInputs: {#hello: 'world'},
+        positionalInputs: [1, 1.1, 2, 3, 4.4],
+      );
+      final key2 = FstateKey<int>(
+        builder: builder,
+        namedInputs: {#hello: 'world'},
+        positionalInputs: [1, 1.1, 2, 3, 4.4],
+      );
+      expect(key1, equals(key2));
+    });
   });
 
   group('FstateKeyFamily', () {
@@ -61,7 +75,7 @@ void main() {
 }
 
 class OnePositionalArgumentFamily<T> extends FstateKeyFamily<T> {
-  OnePositionalArgumentFamily({
+  const OnePositionalArgumentFamily({
     required Function builder,
   }) : _builder = builder;
   final Function _builder;
@@ -79,7 +93,7 @@ class OnePositionalArgumentFamily<T> extends FstateKeyFamily<T> {
 }
 
 class OneArgumentFamily<T> extends FstateKeyFamily<T> {
-  OneArgumentFamily({
+  const OneArgumentFamily({
     required Function builder,
   }) : _builder = builder;
   final Function _builder;
@@ -105,20 +119,5 @@ class NoParamFstateKeyFamily<T> extends FstateKeyFamily<T> {
 
   FstateKey<T> call() {
     return noSuchMethod(Invocation.method(#fstate, [], {#builder: _builder}));
-  }
-}
-
-abstract class FstateKeyFamily<T> {
-  const FstateKeyFamily();
-
-  @override
-  noSuchMethod(Invocation invocation) {
-    final positionalParams = invocation.positionalArguments;
-    final namedParams = invocation.namedArguments;
-    return Function.apply(
-      FstateKey<T>.new,
-      positionalParams,
-      namedParams,
-    );
   }
 }
