@@ -18,11 +18,9 @@ void main() {
       final finder = find.byKey(key);
       final containerElement = tester.element(finder);
 
-      expect(() {
-        final container = FstateScope.containerOf(containerElement);
+      final container = FstateScope.containerOf(containerElement);
 
-        expect(container, isNotNull);
-      }, isNot(throwsA(anything)));
+      expect(container, isNotNull);
     });
 
     testWidgets(

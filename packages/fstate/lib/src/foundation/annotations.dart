@@ -1,7 +1,10 @@
 // coverage:ignore-file
-const baseConstructor = BaseConstructor();
 
 /// Annotate class to register it.
+const fstate = Fstate();
+const constructor = Constructor();
+const notify = Notify();
+
 class Fstate {
   const Fstate();
 }
@@ -14,7 +17,7 @@ class Fwidget {
 /// Annotation to inject dependency.
 class Inject {
   const Inject({this.from});
-  final Function? from;
+  final dynamic from;
 }
 
 /// Annotate method as a state changer.
@@ -23,6 +26,6 @@ class Notify {
 }
 
 /// Annotation to mark the constructor as base constructor.
-class BaseConstructor {
-  const BaseConstructor();
+class Constructor {
+  const Constructor();
 }
