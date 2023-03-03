@@ -10,28 +10,29 @@ void main() {
       container = FstateContainer();
     });
     test('can put anything', () async {
-      final deps = [10, 'string', 1.1, Dummy()];
+      final deps = [() => 10, () => 'string', () => 1.1];
       for (final dep in deps) {
-        container.put(dep.runtimeType, dep);
+        final key = FstateKey(builder: dep);
+        container.put(key);
       }
 
       for (final dep in deps) {
-        final type = dep.runtimeType;
-        final found = container.get(type);
-        expect(found, dep);
+        final key = FstateKey(builder: dep);
+        final found = container.get(key);
+        expect(found, dep());
       }
     });
 
     test('can update value', () {
-      const key = 'key';
-      container.put(key, 10);
+      final key = FstateKey(builder: () => 10);
+      container.put(key);
       container.put(key, 1);
       final int updated = container.get(key);
       expect(updated, 1);
     });
 
-    test('should throw on getting non-registered key', () {
-      const key = 'nothing';
+    test('should return null on getting non-registered key', () {
+      final key = FstateKey(builder: () => 1);
       final data = container.get(key);
       expect(
         data,
@@ -41,32 +42,29 @@ void main() {
 
     test('can get stream of data', () {
       final examples = [
-        ['first', 1, 2],
-        ['second', 1.1, 2.2],
-        ['third', 'hello', 'hi'],
-        ['fourth', Dummy(), Dummy()]
+        [FstateKey(builder: () => 1), 2],
+        [FstateKey(builder: () => 1.1), 2.2],
+        [FstateKey(builder: () => 'hello'), 'hi'],
       ];
 
       for (final ex in examples) {
         final key = ex[0];
-        final first = ex[1];
-        final second = ex[2];
-        container.put(key, first);
+        final second = ex[1];
+        container.put(key as FstateKey);
         final Stream stream = container.stream(key);
         expect(stream, emits(second));
       }
 
       for (final ex in examples) {
-        final key = ex[0];
-        final second = ex[2];
+        final key = ex[0] as FstateKey;
+        final second = ex[1];
         container.put(key, second);
       }
     });
 
     test('can delete items', () {
-      const value = 10;
-      const key = 'key';
-      container.put(key, value);
+      final key = FstateKey(builder: () => 10);
+      container.put(key);
       container.delete(key);
       final data = container.get(key);
       expect(
@@ -76,8 +74,8 @@ void main() {
     });
 
     test('can check if it contains the key', () {
-      const key = 'key';
-      container.put(key, 10);
+      final key = FstateKey(builder: () => 10);
+      container.put(key);
       expect(container.contains(key), isTrue);
       container.delete(key);
       expect(container.contains(key), isFalse);

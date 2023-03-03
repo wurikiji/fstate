@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fstate/fstate.dart';
-import 'package:fstate/src/foundation/key.dart';
 
 void main() {
   late FstateContainer container;
@@ -19,12 +18,24 @@ void main() {
       final key1 = FstateKey<int>(
         builder: builder,
         namedInputs: {#hello: 'world'},
-        positionalInputs: [1, 1.1, 2, 3, 4.4],
+        positionalInputs: [
+          PositionalParam(index: 0, value: 1),
+          PositionalParam(index: 1, value: 1.1),
+          PositionalParam(index: 2, value: 2),
+          PositionalParam(index: 3, value: 3),
+          PositionalParam(index: 4, value: 4.4),
+        ],
       );
       final key2 = FstateKey<int>(
         builder: builder,
         namedInputs: {#hello: 'world'},
-        positionalInputs: [1, 1.1, 2, 3, 4.4],
+        positionalInputs: [
+          PositionalParam(index: 0, value: 1),
+          PositionalParam(index: 1, value: 1.1),
+          PositionalParam(index: 2, value: 2),
+          PositionalParam(index: 3, value: 3),
+          PositionalParam(index: 4, value: 4.4),
+        ],
       );
       expect(key1, equals(key2));
     });
@@ -38,7 +49,7 @@ void main() {
       expect(value, 1);
     });
     test('can inject manually', () {
-      final family = OneArgumentFamily<int>(builder: (int i) => i);
+      final family = OnePositionalArgumentFamily<int>(builder: (int i) => i);
       for (final input in [1, 2, 3, 4, 5]) {
         final key = family(input);
         final value = key.build(container);
@@ -46,19 +57,20 @@ void main() {
       }
     });
     test('creates a equal key for equal positional inputs', () {
-      final family = OneArgumentFamily<int>(builder: (int i) => i);
+      final family = OnePositionalArgumentFamily<int>(builder: (int i) => i);
       for (final input in [1, 2, 3, 4, 5]) {
         final key1 = family(input);
         final key2 = family(input);
         expect(key1, key2);
         final value = key1.build(container);
+        expect(value, input);
         container.put(key1, value);
         final got = container.get(key2);
         expect(got, value);
       }
     });
     test('creates a equal key for equal named inputs', () {
-      final family = OnePositionalArgumentFamily<int>(
+      final family = OneNamedArgumentFamily<int>(
         builder: ({required int i}) => i,
       );
       for (final input in [1, 2, 3, 4, 5]) {
@@ -66,6 +78,7 @@ void main() {
         final key2 = family(i: input);
         expect(key1, key2);
         final value = key1.build(container);
+        expect(value, input);
         container.put(key1, value);
         final got = container.get(key2);
         expect(got, value);
@@ -74,8 +87,8 @@ void main() {
   });
 }
 
-class OnePositionalArgumentFamily<T> extends FstateKeyFamily<T> {
-  const OnePositionalArgumentFamily({
+class OneNamedArgumentFamily<T> extends FstateKeyFamily<T> {
+  const OneNamedArgumentFamily({
     required Function builder,
   }) : _builder = builder;
   final Function _builder;
@@ -91,8 +104,8 @@ class OnePositionalArgumentFamily<T> extends FstateKeyFamily<T> {
   }
 }
 
-class OneArgumentFamily<T> extends FstateKeyFamily<T> {
-  const OneArgumentFamily({
+class OnePositionalArgumentFamily<T> extends FstateKeyFamily<T> {
+  const OnePositionalArgumentFamily({
     required Function builder,
   }) : _builder = builder;
   final Function _builder;
@@ -102,7 +115,9 @@ class OneArgumentFamily<T> extends FstateKeyFamily<T> {
       [],
       {
         #builder: _builder,
-        #positionalInputs: [i],
+        #positionalInputs: [
+          PositionalParam(index: 0, value: i),
+        ],
       },
     );
   }
