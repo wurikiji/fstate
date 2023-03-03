@@ -19,10 +19,9 @@ class PositionalInjection extends InjectionPlace {
 
   @override
   String toString() {
-    final value = '${name}Value';
+    final value = parameter.injectionCode;
     return '''
-final $value = ${parameter.injectionCode};
-final $name = PositionalParam(index: $index, value: $value);
+PositionalParam(index: $index, value: $value)
 ''';
   }
 }
@@ -32,10 +31,9 @@ class NamedInjection extends InjectionPlace {
 
   @override
   String toString() {
-    final value = '${name}Value';
+    final value = parameter.injectionCode;
     return '''
-final $value = ${parameter.injectionCode};
-final $name = MapEntry(#$name, $value);
+#$name: $value
 ''';
   }
 }

@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:fstate_generator/src/injections/inject_from.dart';
+import 'package:fstate_generator/src/injections/injection_place.dart';
 import 'package:fstate_generator/src/type_checkers/annotations.dart';
-import 'package:fstate_generator/src/wrapper/basic_constructor.dart';
 import 'package:source_gen/source_gen.dart';
 
 import 'src/utils/element.dart';
+import 'src/wrapper/base_constructor.dart';
 
 Builder coreBuilder(BuilderOptions option) {
   return SharedPartBuilder(
@@ -29,56 +30,48 @@ class KeyGenerator extends Generator {
     return fstateClasses
         .map(classElementFromAnnotation)
         .map(baseConstructorFromClassElement)
-        .map((constructor) {
-      final className = constructor.constructor.enclosingElement.displayName;
-      String constructorName = constructor.constructor.displayName;
-      if (!constructorName.contains('.')) {
-        constructorName = '$constructorName.new';
-      }
-      final injectionParameters = constructor.parameters
-          .where(hasInjectionAnnotation)
-          .map((e) => InjectionFrom(constructor, e));
-
-      if (injectionParameters.isEmpty) {
-        return 'const \$${sentenceCaseToCamelCase(className)} = FstateKey<$className>(builder: $constructorName);';
-      }
-
-      for (final i in injectionParameters) {
-        if (i is InjectFromFstateKey) {
-          print(i.injectedKey);
-        }
-      }
-      return '';
-    }).join('\n');
+        .map(generateInjectionCode)
+        .join('\n');
   }
 }
 
-BaseConstructor baseConstructorFromClassElement(ClassElement element) {
-  final constructors = element.constructors.where(
-    (element) => constructorAnnotationChecker.hasAnnotationOf(element),
-  );
+String generateInjectionCode(BaseConstructor constructor) {
+  final className = constructor.constructor.enclosingElement.displayName;
+  String constructorName = constructor.constructor.displayName;
 
-  if (constructors.isEmpty) {
-    throw InvalidGenerationSourceError(
-      'No constructor with @constructor annotation found in ${element.displayName}',
-      element: element,
-    );
+  if (!constructorName.contains('.')) {
+    constructorName = '$constructorName.new';
   }
 
-  if (constructors.length > 1) {
-    throw InvalidGenerationSourceError(
-      'Multiple constructors with @constructor annotation found in ${element.displayName}',
-      element: element,
-    );
+  if (constructor.parameters.isEmpty) {
+    return 'const \$${sentenceCaseToCamelCase(className)} = FstateKey<$className>(builder: $constructorName);';
   }
 
-  return BaseConstructor(constructors.first);
-}
+  final injectionParameters = constructor.parameters
+      .where(hasInjectionAnnotation)
+      .map((e) => InjectionFrom(constructor, e));
 
-Element elementFromAnnotation(AnnotatedElement annotation) {
-  return annotation.element;
-}
+  final injectionPlaces = injectionParameters.map(InjectionPlace.new).toList();
+  final positionals = injectionPlaces
+      .whereType<PositionalInjection>()
+      .map((e) => e.toString())
+      .join(',');
+  final named = injectionPlaces
+      .whereType<NamedInjection>()
+      .map((e) => e.toString())
+      .join(',');
 
-ClassElement classElementFromAnnotation(AnnotatedElement annotation) {
-  return elementFromAnnotation(annotation) as ClassElement;
+  final keyClassName = '_${className}Key';
+  return '''
+const \$${sentenceCaseToCamelCase(className)} = $keyClassName(builder: $constructorName);
+class $keyClassName extends FstateKey<$className> {
+  const $keyClassName({required super.builder});
+
+  @override
+  List<PositionalParam> get additionalPositionalInputs => [$positionals];
+
+  @override
+  Map<Symbol, dynamic> get additionalNamedInputs => {$named};
+}
+''';
 }
