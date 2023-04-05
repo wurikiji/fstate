@@ -1,31 +1,51 @@
 // coverage:ignore-file
 
-/// Annotate class to register it.
-const fstate = Fstate();
-const constructor = Constructor();
-const notify = Notify();
+import 'package:meta/meta_meta.dart';
 
+/// Annotate class to register it.
+
+/// Annotate class to extend it to reactive state.
+@Target({TargetKind.classType})
 class Fstate {
   const Fstate();
 }
 
+/// Annotate function to use it as a selector.
+@Target({TargetKind.function})
+class Fselector {
+  const Fselector();
+}
+
 /// Annotate widget to implement it.
+@Target({TargetKind.classType})
 class Fwidget {
   const Fwidget();
 }
 
-/// Annotation to inject dependency.
-class Inject {
-  const Inject({this.from});
-  final dynamic from;
+typedef Alternator = Stream Function(Stream source);
+
+/// Annotate parameters to be auto-injected.
+///
+/// [derivedFrom]
+/// [alternator] should returns a same type of stream with source.
+@Target({TargetKind.parameter})
+class Finject {
+  const Finject({this.derivedFrom, this.alternator});
+  final Function? derivedFrom;
+  final Alternator? alternator;
 }
 
-/// Annotate method as a state changer.
-class Notify {
-  const Notify();
+/// Annotate methods as a state changer.
+@Target({TargetKind.method, TargetKind.setter, TargetKind.field})
+class Faction {
+  const Faction({this.returnsNextState = false});
+
+  /// If true, the method should return the next state,
+  /// which is same type of annotated class.
+  final bool returnsNextState;
 }
 
-/// Annotation to mark the constructor as base constructor.
-class Constructor {
-  const Constructor();
+/// Annotate a constructor as a base constructor.
+class Fconstructor {
+  const Fconstructor();
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../foundation/container.dart';
+import '../../fstate.dart';
 
 class FstateScope extends StatefulWidget {
   final Widget child;
@@ -10,7 +10,7 @@ class FstateScope extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  static FstateContainer containerOf(BuildContext context) {
+  static FstateStreamContainer containerOf(BuildContext context) {
     final scoped =
         context.dependOnInheritedWidgetOfExactType<_ScopedFstateContainer>();
 
@@ -27,7 +27,7 @@ class FstateScope extends StatefulWidget {
 }
 
 class _FstateScopeState extends State<FstateScope> {
-  final container = FstateContainer();
+  final container = FstateStreamContainer();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _FstateScopeState extends State<FstateScope> {
 }
 
 class _ScopedFstateContainer extends InheritedWidget {
-  final FstateContainer container;
+  final FstateStreamContainer container;
 
   const _ScopedFstateContainer({
     required super.child,
