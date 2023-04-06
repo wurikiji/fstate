@@ -12,24 +12,27 @@ class ExtendedStateGenerator {
   final String constructor;
   final List<ParameterWithMetadata> constructorParams;
   final List<StateAction> actions;
-  String generateExtendedState() {
-    throw 'Not implemented';
-  }
 
-  String generateDefaultConstructor() {
-    throw 'Not implemented';
-  }
+  String generate() {
+    final stateActions = actions.map((e) => e.generate('_$name')).join();
+    return '''
+class _$name implements $name {
+  _$name({
+    required this.\$setNextState,
+    ${joinParamsToNamedParams(constructorParams.map((e) => e.parameter))}
+  }) : _state = $name.$constructor(${joinParamsWithMetadataToArguments(constructorParams)});
 
-  String generateFromConstructor() {
-    throw 'Not implemented';
-  }
+  _$name.from({
+    required this.\$setNextState,
+    required $name \$state,
+  }) : _state = \$state;
 
-  String generateActionMethod() {
-    throw 'Not implemented';
-  }
+  final void Function($name) \$setNextState;
+  final $name _state;
 
-  String generateActionField() {
-    throw 'Not implemented';
+  $stateActions
+}
+''';
   }
 }
 

@@ -22,7 +22,7 @@ class Counter {
   @Faction(returnsNextState: true)
   Counter decrement() {
     // pure function
-    return Counter(--value);
+    return Counter(value - 1);
   }
 
   @Faction()
@@ -207,13 +207,14 @@ class _Counter implements Counter {
   _Counter({
     required this.setNextState,
     int value = 0,
-  }) : _counter = Function.apply(Counter.new, [value]);
+  }) : _counter = Counter(value);
 
   _Counter.from({
     required this.setNextState,
     required Counter counter,
   }) : _counter = counter;
 
+  final void Function(Counter) setNextState;
   final Counter _counter;
 
   @override
@@ -224,8 +225,6 @@ class _Counter implements Counter {
     _counter.value = newValue;
     setNextState(_Counter.from(setNextState: setNextState, counter: _counter));
   }
-
-  final void Function(Counter) setNextState;
 
   @override
   void increment() {
@@ -250,6 +249,32 @@ class _Counter implements Counter {
     );
     return result;
   }
+}
+
+class $Counter extends FstateFactory<Counter> {
+  $Counter({
+    this.value = 0,
+  }) : stateKey = _CounterKey(
+          value: value,
+        );
+  final int value;
+
+  @override
+  final FstateKey stateKey;
+
+  @override
+  List<Param> get params => [
+        Param.named(#value, value),
+      ];
+
+  @override
+  Function get stateBuilder => _Counter.new;
+}
+
+class _CounterKey extends FstateKey {
+  _CounterKey({
+    int value = 0,
+  }) : super(Counter, [Counter.new, value]);
 }
 
 /// State builder
@@ -289,48 +314,11 @@ class $CounterIncreaser extends FstateWidget {
   Function get widgetBuilder => CounterIncreaser.new;
 }
 
-class FwidgetParams {
-  FwidgetParams({
-    required this.factory,
-    this.modifier,
-    this.selector,
-  });
-
-  final Stream? modifier;
-  final Function? selector;
-  final FstateFactory factory;
-}
-
-class $Counter extends FstateFactory<Counter> {
-  $Counter({
-    this.value = 0,
-  }) : stateKey = _CounterKey(
-          value: value,
-        );
-  final int value;
-
-  @override
-  final FstateKey stateKey;
-
-  @override
-  List<Param> get params => [
-        Param.named(#value, value),
-      ];
-
-  @override
-  Function get stateBuilder => _Counter.new;
-}
-
-class _CounterKey extends FstateKey {
-  _CounterKey({
-    int value = 0,
-  }) : super(Counter, [Counter.new, value]);
-}
-
-/// @Fselector()
-/// int countSelector(
-///   @Finject() Counter counter,
-/// ) => counter.value;
+_countSelector({
+  required Counter counter,
+  setNextState,
+}) =>
+    countSelector(counter);
 
 class $CountSelector extends FstateFactory<int> {
   $CountSelector() : stateKey = _CountSelectorKey();
@@ -341,12 +329,7 @@ class $CountSelector extends FstateFactory<int> {
       ];
 
   @override
-  Function get stateBuilder => ({
-        required Counter counter,
-        setNextState,
-      }) {
-        return countSelector(counter);
-      };
+  Function get stateBuilder => _countSelector;
 
   @override
   final FstateKey stateKey;
