@@ -3,24 +3,13 @@ targets:
     builders:
       fstate_generator:core_generator:
         enabled: true
-      fstate_generator:widget_generator:
-        enabled: true
 
 builders:
   core_generator:
-    import: "package:fstate_generator/core_builder.dart"
+    import: "package:fstate_generator/builders.dart"
     builder_factories:
       - "coreBuilder"
     build_extensions: { ".dart": [".fstate.g.part"] }
-    auto_apply: dependents
-    build_to: cache
-    applies_builders: [source_gen:combining_builder]
-
-  widget_generator:
-    import: "package:fstate_generator/widget_builder.dart"
-    builder_factories:
-      - "widgetBuilder"
-    build_extensions: { ".dart": [".fwidget.g.part"] }
     auto_apply: dependents
     build_to: cache
     applies_builders: [source_gen:combining_builder]

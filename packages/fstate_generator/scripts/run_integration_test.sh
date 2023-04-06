@@ -8,8 +8,7 @@ echo "import 'package:test/test.dart';" | cat - test/full_coverage_test.dart > t
 gsed -i 's/{}/{ test("", () => null); }/' test/full_coverage_test.dart
 ## end set up full test coverage
 
-dart run build_runner build --delete-conflicting-outputs  &&
-  dart pub global activate coverage &&
+flutter pub run build_runner build --delete-conflicting-outputs  &&
   flutter test --coverage --branch-coverage test/integration_test
 
 

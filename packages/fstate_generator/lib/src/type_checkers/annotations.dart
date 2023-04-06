@@ -4,18 +4,22 @@ TypeChecker fstateAnnotationChecker = TypeChecker.fromUrl(
   'package:fstate/src/foundation/annotations.dart#Fstate',
 );
 
+TypeChecker fselectorAnnotationChecker = TypeChecker.fromUrl(
+  'package:fstate/src/foundation/annotations.dart#Fselector',
+);
+
+TypeChecker finjectAnnotationChecker = TypeChecker.fromUrl(
+  'package:fstate/src/foundation/annotations.dart#Finject',
+);
+
+TypeChecker factionAnnotationChecker = TypeChecker.fromUrl(
+  'package:fstate/src/foundation/annotations.dart#Faction',
+);
+
+TypeChecker fconstructorAnnotationChecker = TypeChecker.fromUrl(
+  'package:fstate/src/foundation/annotations.dart#Fconstructor',
+);
+
 TypeChecker fwidgetAnnotationChecker = TypeChecker.fromUrl(
   'package:fstate/src/foundation/annotations.dart#Fwidget',
-);
-
-TypeChecker injectAnnotationChecker = TypeChecker.fromUrl(
-  'package:fstate/src/foundation/annotations.dart#Inject',
-);
-
-TypeChecker notifyAnnotationChecker = TypeChecker.fromUrl(
-  'package:fstate/src/foundation/annotations.dart#Notify',
-);
-
-TypeChecker constructorAnnotationChecker = TypeChecker.fromUrl(
-  'package:fstate/src/foundation/annotations.dart#Constructor',
 );
