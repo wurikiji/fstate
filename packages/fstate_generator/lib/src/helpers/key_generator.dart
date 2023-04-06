@@ -27,23 +27,12 @@ class $keyName extends FstateKey {
     final keyName = baseName.toKeyName();
     return '''
 $keyName({
-  ${_generateConstructorParams()}
+  ${joinParamsToNamedParams(params)}
 }) : super(
   $stateType,
-  [${_listParamNames()}]
+  [${joinParamNames(params)}]
 );
 ''';
-  }
-
-  String _generateConstructorParams() {
-    return params
-        .map((e) =>
-            '${e.type.endsWith('?') || e.defaultValue != null ? '' : 'required'} ${e.type} ${e.name} ${e.defaultValue != null ? '= ${e.defaultValue}' : ''}')
-        .join(',');
-  }
-
-  String _listParamNames() {
-    return params.map((e) => e.name).join(', ');
   }
 
   @override

@@ -21,34 +21,12 @@ class ExtendedSelectorGenerator {
     return '''
 $returnType _$name({
   setNextState,
-  ${_paramsToNamedParams()}
+  ${joinParamsToNamedParams(params.map((e) => e.parameter))}
 })
 ''';
   }
 
   String _generateCall() {
-    return '$name(${_paramsToArguments()})';
-  }
-
-  String _paramsToNamedParams() {
-    return params
-        .map((e) =>
-            '${e.isRequired && e.parameter.defaultValue == null ? 'required' : ''} ${e.parameter.type} ${e.parameter.name} ${e.parameter.defaultValue != null ? '= ${e.parameter.defaultValue}' : ''}')
-        .join(',');
-  }
-
-  String _paramsToArguments() {
-    final positionals = params
-        .where((e) => e.isPositional)
-        .map((e) => e.parameter.name)
-        .join(',');
-    final named = params
-        .where((e) => e.isNamed)
-        .map((e) => '${e.parameter.name}: ${e.parameter.name}')
-        .join(',');
-    return '''
-  ${positionals.isNotEmpty ? '$positionals,' : ''}
-  $named
-''';
+    return '$name(${joinParamsWithMetadataToArguments(params)})';
   }
 }

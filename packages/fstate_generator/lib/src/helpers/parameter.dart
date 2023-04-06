@@ -7,6 +7,24 @@ class Parameter {
   final String type;
   final String name;
   final String? defaultValue;
+
+  bool get isOptional => type.endsWith('?') || defaultValue != null;
+
+  String toNamedParam() {
+    return '${isOptional ? '' : 'required'} $type $name ${defaultValue != null ? '= $defaultValue' : ''}';
+  }
+
+  String toPositionalParam() {
+    return '$type $name ${defaultValue != null ? '= $defaultValue' : ''}';
+  }
+
+  String toNamedArgument() {
+    return '$name: $name';
+  }
+
+  String toPositionalArgument() {
+    return name;
+  }
 }
 
 class ParameterWithMetadata {
@@ -45,4 +63,55 @@ class ParameterWithMetadata {
 
   bool get isOptional => !isRequired;
   bool get isNamed => !isPositional;
+}
+
+String joinParamNames(Iterable<Parameter> params) {
+  return params.map((e) => e.name).join(', ');
+}
+
+String joinParamsToNamedParams(Iterable<Parameter> params) {
+  return params.map((e) => e.toNamedParam()).join(',');
+}
+
+String joinParamsWithMetadataToArguments(
+  Iterable<ParameterWithMetadata> params,
+) {
+  final positionals = params
+      .where((e) => e.isPositional)
+      .map((e) => e.parameter.toPositionalArgument())
+      .join(',');
+  final named = params
+      .where((e) => e.isNamed)
+      .map((e) => e.parameter.toNamedArgument())
+      .join(',');
+  return '''
+  ${positionals.isNotEmpty ? '$positionals,' : ''}
+  $named
+''';
+}
+
+String joinParamsWithMetadata(
+  Iterable<ParameterWithMetadata> params,
+) {
+  final positionals =
+      (params.where((e) => e.isPositional && !e.parameter.isOptional).toList()
+            ..sort((a, b) => a.position.compareTo(b.position)))
+          .map((e) => e.parameter.toPositionalParam())
+          .join(',');
+
+  final optionals =
+      (params.where((e) => e.isPositional && e.parameter.isOptional).toList()
+            ..sort((a, b) => a.position.compareTo(b.position)))
+          .map((e) => e.parameter.toPositionalParam())
+          .join(',');
+
+  final named = params
+      .where((e) => e.isNamed)
+      .map((e) => e.parameter.toNamedParam())
+      .join(',');
+  return '''
+  ${positionals.isNotEmpty ? '$positionals,' : ''}
+  ${optionals.isNotEmpty ? '[$optionals]' : ''}
+  ${named.isNotEmpty ? '{$named}' : ''}
+''';
 }
