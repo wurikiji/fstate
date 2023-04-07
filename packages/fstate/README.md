@@ -23,21 +23,21 @@ Each package has `scripts/run_test.sh` to run tests.
 
 # TODO
 
-- [ ] Simple injection
+- [x] Simple injection
+  - [x] Template test
+  - [x] Code Generator
+- [x] Simple selector
+  - [x] Template test
+  - [x] Code Generator
+- [x] Simple alternator
+  - [x] Template test
+  - [x] Code Generator
+- [x] Simple widget builder
   - [x] Template test
   - [x] Code Generator
 - [ ] Family
   - [ ] Template test
   - [ ] Code Generator
-- [ ] Simple selector
-  - [x] Template test
-  - [x] Code Generator
-- [ ] Simple alternator
-  - [x] Template test
-  - [x] Code Generator
-- [ ] Simple widget builder
-  - [x] Template test
-  - [x] Code Generator
 - [ ] State from the selector
   - [ ] Template test
   - [ ] Code Generator

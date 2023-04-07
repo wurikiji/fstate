@@ -66,7 +66,7 @@ abstract class FstateFactory<T> {
       });
     });
 
-    return MergeStream([refreshStream, manualSubject]);
+    return MergeStream([refreshStream, manualSubject]).asBroadcastStream();
   }
 
   T _constructState(Iterable<Param> params, void Function(T) setNextState) {
