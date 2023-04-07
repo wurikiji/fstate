@@ -8,3 +8,5 @@ pubspec.lock
 
 test/**/*.g.dart
 build/
+lib/main.dart
+ios/

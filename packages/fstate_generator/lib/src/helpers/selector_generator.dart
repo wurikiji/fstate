@@ -20,7 +20,7 @@ class ExtendedSelectorGenerator {
   String _generateDefinition() {
     return '''
 $returnType _$name({
-  setNextState,
+  \$setNextState,
   ${joinParamsToNamedParams(params)}
 })
 ''';

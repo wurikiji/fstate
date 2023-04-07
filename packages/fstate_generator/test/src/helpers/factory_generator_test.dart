@@ -1,3 +1,4 @@
+import 'package:fstate_generator/src/helpers/alternator.dart';
 import 'package:fstate_generator/src/helpers/factory_generator.dart';
 import 'package:fstate_generator/src/helpers/parameter.dart';
 import 'package:test/test.dart';

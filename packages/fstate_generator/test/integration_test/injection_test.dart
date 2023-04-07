@@ -135,7 +135,7 @@ class DebouncedCounterWidget extends StatelessWidget {
 void main() {
   group('Simple injectable state', () {
     testWidgets('can inject', (tester) async {
-      const widget =
+      final widget =
           FstateScope(child: MaterialApp(home: $InjectedCounterWidget()));
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
@@ -154,7 +154,7 @@ void main() {
       final widget = FstateScope(
           child: MaterialApp(
         home: Column(
-          children: const [
+          children: [
             $CounterWidget(),
             $CounterIncreaser(),
           ],
@@ -177,7 +177,7 @@ void main() {
       final widget = FstateScope(
           child: MaterialApp(
         home: Column(
-          children: const [
+          children: [
             $DebouncedCounterWidget(),
             $CounterIncreaser(),
           ],
@@ -195,6 +195,8 @@ void main() {
 
       final changed = find.text('0');
       expect(changed, findsOneWidget);
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+      expect(find.text('0'), findsOneWidget);
 
       await tester.pumpAndSettle(const Duration(milliseconds: 1200));
       final debounced = find.text('1');

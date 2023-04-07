@@ -23,8 +23,6 @@ class FstateKey {
   String toString() => 'A key for $_type';
 }
 
-const setNextStateSymbol = #setNextState;
-
 abstract class FstateFactory<T> {
   const FstateFactory();
 
@@ -74,7 +72,7 @@ abstract class FstateFactory<T> {
   T _constructState(Iterable<Param> params, void Function(T) setNextState) {
     final positionalParams = convertToPositionalParams(params).toList();
     final namedParams = convertToNamedParams(params);
-    namedParams[setNextStateSymbol] = setNextState;
+    namedParams[#$setNextState] = setNextState;
     return Function.apply(stateBuilder, positionalParams, namedParams);
   }
 }

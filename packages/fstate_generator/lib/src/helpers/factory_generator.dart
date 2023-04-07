@@ -1,5 +1,8 @@
 import 'package:fstate_generator/src/helpers/key_generator.dart';
 import 'package:fstate_generator/src/helpers/parameter.dart';
+import 'package:recase/recase.dart';
+
+import 'alternator.dart';
 
 class FstateFactoryGenerator {
   FstateFactoryGenerator({
@@ -22,9 +25,10 @@ class FstateFactoryGenerator {
       (element) => element.defaultValue == null && !element.autoInject,
     );
     final constructorParams = joinParamsToNamedParams(familyParams);
+    final factoryName = '\$${baseName.pascalCase}';
     return '''
-class \$$baseName extends FstateFactory<$type> {
-  \$$baseName(
+class $factoryName extends FstateFactory<$type> {
+  $factoryName(
     ${constructorParams.isNotEmpty ? '{$constructorParams}' : ''}
 ) : stateKey = ${baseName.toKeyName()}(${joinParamsToNamedArguments(familyParams)});
 
@@ -50,21 +54,6 @@ class \$$baseName extends FstateFactory<$type> {
 
 String joinParamsToFstateFactoryParams(List<ParameterWithMetadata> params) {
   return params.map((e) => e.toFstateFactoryParam()).join(',\n');
-}
-
-String joinAlternatorsToMap(List<AlternatorArg> alternators) {
-  return alternators
-      .map((e) => '#${e.target}: ${e.alternatorName}')
-      .join(',\n');
-}
-
-class AlternatorArg {
-  AlternatorArg({
-    required this.target,
-    required this.alternatorName,
-  });
-  final String target;
-  final String alternatorName;
 }
 
 extension ToFstateFactoryParam on Parameter {

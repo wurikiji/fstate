@@ -2,3 +2,6 @@
 coverage/
 pubspec_overrides.yaml
 full_coverage_test.dart
+.idea/
+.metadata
+fstate_generator.iml

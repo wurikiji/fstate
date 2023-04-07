@@ -10,7 +10,7 @@ gsed -i 's/{}/{ test("", () => null); }/' test/full_coverage_test.dart
 
 dart run build_runner build --delete-conflicting-outputs &&
   dart pub global activate coverage && 
-  dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage -- -P build_test &&
+  dart pub global run coverage:test_with_coverage --branch-coverage --function-coverage -- test/src test/unit_test test/full_coverage_test.dart &&
     genhtml -q -o ./coverage/html ./coverage/lcov.info &&
     lcov --list coverage/lcov.info 
 

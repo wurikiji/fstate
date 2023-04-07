@@ -1,10 +1,6 @@
-tags:
-  integration_test:
-
-  unit_test:
-
 presets:
   build_test:
     paths:
       - "test/unit_test"
       - "test/full_coverage_test.dart"
+      - "test/src"

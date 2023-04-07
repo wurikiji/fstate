@@ -8,7 +8,11 @@ import 'package:fstate_generator/src/helpers/parameter.dart';
 import 'package:fstate_generator/src/helpers/selector_generator.dart';
 import 'package:fstate_generator/src/helpers/state_generator.dart';
 import 'package:fstate_generator/src/type_checkers/annotations.dart';
+import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'src/helpers/alternator.dart';
+import 'src/helpers/widget_generator.dart';
 
 Builder coreBuilder(BuilderOptions option) {
   return SharedPartBuilder(
@@ -43,13 +47,24 @@ class StateGenerator extends Generator {
             ),
             ...constructor.parameters.map(
               (e) {
+                final autoinjection =
+                    finjectAnnotationChecker.hasAnnotationOf(e);
+                String type = e.type
+                    .getDisplayString(withNullability: true)
+                    .replaceAll('*', '');
+                final derivedFrom = finjectAnnotationChecker
+                    .firstAnnotationOf(e)
+                    ?.getField('derivedFrom')
+                    ?.toFunctionValue();
+
+                if (autoinjection && derivedFrom != null) {
+                  type = derivedFrom.name.pascalCase;
+                }
                 return Parameter(
-                  type: e.type
-                      .getDisplayString(withNullability: true)
-                      .replaceAll('*', ''),
+                  type: type,
                   name: e.name,
                   defaultValue: e.defaultValueCode,
-                  autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                  autoInject: autoinjection,
                 );
               },
             ).toList(),
@@ -71,24 +86,32 @@ class StateGenerator extends Generator {
                 ?.toBoolValue() ??
             false;
         final params = e.parameters.map((e) {
+          final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+          String type = e.type
+              .getDisplayString(withNullability: true)
+              .replaceAll('*', '');
+          final derivedFrom = finjectAnnotationChecker
+              .firstAnnotationOf(e)
+              ?.getField('derivedFrom')
+              ?.toFunctionValue();
+
+          if (autoinjection && derivedFrom != null) {
+            type = derivedFrom.name.pascalCase;
+          }
           if (e.isPositional) {
             return ParameterWithMetadata.positional(
               name: e.name,
-              type: e.type
-                  .getDisplayString(withNullability: true)
-                  .replaceAll('*', ''),
+              type: type,
               position: e.parameters.indexOf(e),
               defaultValue: e.defaultValueCode,
-              autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+              autoInject: autoinjection,
             );
           }
           return ParameterWithMetadata.named(
-            type: e.type
-                .getDisplayString(withNullability: true)
-                .replaceAll('*', ''),
+            type: type,
             name: e.name,
             defaultValue: e.defaultValueCode,
-            autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+            autoInject: autoinjection,
           );
         }).toList();
         final returnType = e.returnType
@@ -122,23 +145,31 @@ class StateGenerator extends Generator {
         baseName: e.displayName,
         constructor: constructor.displayName,
         constructorParams: parameters.map((e) {
+          final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+          String type = e.type
+              .getDisplayString(withNullability: true)
+              .replaceAll('*', '');
+          final derivedFrom = finjectAnnotationChecker
+              .firstAnnotationOf(e)
+              ?.getField('derivedFrom')
+              ?.toFunctionValue();
+
+          if (autoinjection && derivedFrom != null) {
+            type = derivedFrom.name.pascalCase;
+          }
           return e.isPositional
               ? ParameterWithMetadata.positional(
                   name: e.name,
-                  type: e.type
-                      .getDisplayString(withNullability: true)
-                      .replaceAll('*', ''),
+                  type: type,
                   position: parameters.indexOf(e),
                   defaultValue: e.defaultValueCode,
-                  autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                  autoInject: autoinjection,
                 )
               : ParameterWithMetadata.named(
-                  type: e.type
-                      .getDisplayString(withNullability: true)
-                      .replaceAll('*', ''),
+                  type: type,
                   name: e.name,
                   defaultValue: e.defaultValueCode,
-                  autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                  autoInject: autoinjection,
                 );
         }).toList(),
         actions: [...methodActions, ...fieldActions],
@@ -160,36 +191,44 @@ class StateGenerator extends Generator {
                 finjectAnnotationChecker
                     .firstAnnotationOf(e)!
                     .getField('alternator')
-                    ?.variable !=
+                    ?.toFunctionValue() !=
                 null)
             .map((e) {
           final target = e.name;
           final annotation = finjectAnnotationChecker.annotationsOf(e).first;
           final alternatorName =
-              annotation.getField('alternator')!.variable!.name;
+              annotation.getField('alternator')!.toFunctionValue()!.name;
           return AlternatorArg(target: target, alternatorName: alternatorName);
         });
         return FstateFactoryGenerator(
           baseName: e.displayName,
           type: e.displayName,
           params: constructor.parameters.map((e) {
+            final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+            String type = e.type
+                .getDisplayString(withNullability: true)
+                .replaceAll('*', '');
+            final derivedFrom = finjectAnnotationChecker
+                .firstAnnotationOf(e)
+                ?.getField('derivedFrom')
+                ?.toFunctionValue();
+
+            if (autoinjection && derivedFrom != null) {
+              type = derivedFrom.name.pascalCase;
+            }
             return e.isPositional
                 ? ParameterWithMetadata.positional(
                     name: e.name,
-                    type: e.type
-                        .getDisplayString(withNullability: true)
-                        .replaceAll('*', ''),
+                    type: type,
                     position: constructor.parameters.indexOf(e),
                     defaultValue: e.defaultValueCode,
-                    autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                    autoInject: autoinjection,
                   )
                 : ParameterWithMetadata.named(
-                    type: e.type
-                        .getDisplayString(withNullability: true)
-                        .replaceAll('*', ''),
-                    autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                    type: type,
                     name: e.name,
                     defaultValue: e.defaultValueCode,
+                    autoInject: autoinjection,
                   );
           }).toList(),
           stateConstructor:
@@ -241,13 +280,23 @@ class SelectorGenerator extends Generator {
           ),
           ...constructor.parameters.map(
             (e) {
+              final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+              String type = e.type
+                  .getDisplayString(withNullability: true)
+                  .replaceAll('*', '');
+              final derivedFrom = finjectAnnotationChecker
+                  .firstAnnotationOf(e)
+                  ?.getField('derivedFrom')
+                  ?.toFunctionValue();
+
+              if (autoinjection && derivedFrom != null) {
+                type = derivedFrom.name.pascalCase;
+              }
               return Parameter(
-                type: e.type
-                    .getDisplayString(withNullability: true)
-                    .replaceAll('*', ''),
+                type: type,
                 name: e.name,
                 defaultValue: e.defaultValueCode,
-                autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                autoInject: autoinjection,
               );
             },
           ).toList()
@@ -262,23 +311,30 @@ class SelectorGenerator extends Generator {
           .replaceAll('*', '');
       final name = e.displayName;
       final paramsWithMetadata = e.parameters.map((e) {
+        final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+        String type =
+            e.type.getDisplayString(withNullability: true).replaceAll('*', '');
+        final derivedFrom = finjectAnnotationChecker
+            .firstAnnotationOf(e)
+            ?.getField('derivedFrom')
+            ?.toFunctionValue();
+
+        if (autoinjection && derivedFrom != null) {
+          type = derivedFrom.name.pascalCase;
+        }
         return e.isPositional
             ? ParameterWithMetadata.positional(
                 name: e.name,
-                type: e.type
-                    .getDisplayString(withNullability: true)
-                    .replaceAll('*', ''),
+                type: type,
                 position: e.parameters.indexOf(e),
                 defaultValue: e.defaultValueCode,
-                autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                autoInject: autoinjection,
               )
             : ParameterWithMetadata.named(
-                type: e.type
-                    .getDisplayString(withNullability: true)
-                    .replaceAll('*', ''),
+                type: type,
                 name: e.name,
                 defaultValue: e.defaultValueCode,
-                autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                autoInject: autoinjection,
               );
       }).toList();
       return ExtendedSelectorGenerator(
@@ -302,13 +358,13 @@ class SelectorGenerator extends Generator {
                 finjectAnnotationChecker
                     .firstAnnotationOf(e)!
                     .getField('alternator')
-                    ?.variable !=
+                    ?.toFunctionValue() !=
                 null)
             .map((e) {
           final target = e.name;
           final annotation = finjectAnnotationChecker.annotationsOf(e).first;
           final alternatorName =
-              annotation.getField('alternator')!.variable!.name;
+              annotation.getField('alternator')!.toFunctionValue()!.name;
           return AlternatorArg(target: target, alternatorName: alternatorName);
         });
         final returnType = e.returnType
@@ -318,23 +374,31 @@ class SelectorGenerator extends Generator {
           baseName: e.displayName,
           type: returnType,
           params: constructor.parameters.map((e) {
+            final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+            String type = e.type
+                .getDisplayString(withNullability: true)
+                .replaceAll('*', '');
+            final derivedFrom = finjectAnnotationChecker
+                .firstAnnotationOf(e)
+                ?.getField('derivedFrom')
+                ?.toFunctionValue();
+
+            if (autoinjection && derivedFrom != null) {
+              type = derivedFrom.name.pascalCase;
+            }
             return e.isPositional
                 ? ParameterWithMetadata.positional(
                     name: e.name,
-                    type: e.type
-                        .getDisplayString(withNullability: true)
-                        .replaceAll('*', ''),
+                    type: type,
                     position: constructor.parameters.indexOf(e),
                     defaultValue: e.defaultValueCode,
-                    autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                    autoInject: autoinjection,
                   )
                 : ParameterWithMetadata.named(
-                    type: e.type
-                        .getDisplayString(withNullability: true)
-                        .replaceAll('*', ''),
+                    type: type,
                     name: e.name,
                     defaultValue: e.defaultValueCode,
-                    autoInject: finjectAnnotationChecker.hasAnnotationOf(e),
+                    autoInject: autoinjection,
                   );
           }).toList(),
           stateConstructor: '_${constructor.displayName}',
@@ -364,6 +428,70 @@ class WidgetGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) {
     final fwidgets = library.annotatedWith(fwidgetAnnotationChecker);
-    return super.generate(library, buildStep);
+    final factoryGenerators =
+        fwidgets.map((e) => e.element as ClassElement).map(
+      (e) {
+        final constructor = e.constructors.firstWhere((element) =>
+            fconstructorAnnotationChecker.hasAnnotationOf(element));
+
+        final injections = constructor.parameters.where(
+          (element) => finjectAnnotationChecker.hasAnnotationOf(element),
+        );
+
+        final alternators = injections
+            .where((e) => finjectAnnotationChecker.hasAnnotationOf(e))
+            .where((e) =>
+                finjectAnnotationChecker
+                    .firstAnnotationOf(e)!
+                    .getField('alternator')
+                    ?.toFunctionValue() !=
+                null)
+            .map((e) {
+          final target = e.name;
+          final annotation = finjectAnnotationChecker.annotationsOf(e).first;
+          final alternatorName =
+              annotation.getField('alternator')!.toFunctionValue()!.name;
+          return AlternatorArg(target: target, alternatorName: alternatorName);
+        });
+        return FstateWidgetGenerator(
+          baseName: e.displayName,
+          params: constructor.parameters.map((e) {
+            final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
+            String type = e.type
+                .getDisplayString(withNullability: true)
+                .replaceAll('*', '');
+            final derivedFrom = finjectAnnotationChecker
+                .firstAnnotationOf(e)
+                ?.getField('derivedFrom')
+                ?.toFunctionValue();
+
+            if (autoinjection && derivedFrom != null) {
+              type = derivedFrom.name.pascalCase;
+            }
+
+            return e.isPositional
+                ? ParameterWithMetadata.positional(
+                    name: e.name,
+                    type: type,
+                    position: constructor.parameters.indexOf(e),
+                    defaultValue: e.defaultValueCode,
+                    autoInject: autoinjection,
+                  )
+                : ParameterWithMetadata.named(
+                    type: type,
+                    name: e.name,
+                    defaultValue: e.defaultValueCode,
+                    autoInject: autoinjection,
+                  );
+          }).toList(),
+          widgetBuilder: constructor.displayName.contains('.')
+              ? constructor.displayName
+              : '${constructor.displayName}.new',
+          alternators: alternators.toList(),
+        );
+      },
+    );
+    final outputs = factoryGenerators.map((e) => e.toString()).join('\n');
+    return outputs;
   }
 }
