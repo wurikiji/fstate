@@ -152,7 +152,7 @@ class MethodStateAction extends StateAction {
 @override
 $returnType $name(${joinParamsWithMetadata(params)}) {
   final \$result = _state.$name(${joinParamsWithMetadataToArguments(params)});
-  \$setNextState($stateName.from(\$state: _state, \$setNextState: \$setNextState));
+  ${returnType.isFuture ? '\$result.then((_) => \$setNextState($stateName.from(\$state: _state, \$setNextState: \$setNextState)));' : '\$setNextState($stateName.from(\$state: _state, \$setNextState: \$setNextState));'}
   ${returnType == 'void' ? '' : 'return \$result;'}
 }
 ''';
@@ -176,10 +176,21 @@ class EmitterStateAction extends StateAction {
 @override
 $returnType $name(${joinParamsWithMetadata(params)}) {
   final \$result = _state.$name(${joinParamsWithMetadataToArguments(params)});
-  final \$nextState = $stateName.from(\$state: \$result, \$setNextState: \$setNextState);
-  \$setNextState(\$nextState);
-  return \$nextState;
+  ${returnType.isFuture ? '''
+final nextState = \$result.then((v) {
+  return $stateName.from(\$state: v, \$setNextState: \$setNextState);
+  });
+  nextState.then((v) => \$setNextState(v));
+''' : '''
+final nextState = $stateName.from(\$state: \$result, \$setNextState: \$setNextState);
+\$setNextState(nextState);
+'''}
+  return nextState;
 }
 ''';
   }
+}
+
+extension IsFuture on String {
+  bool get isFuture => startsWith('Future') && !contains(' ');
 }

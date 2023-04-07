@@ -4,3 +4,4 @@ pubspec_overrides.yaml
 full_coverage_test.dart
 .idea/
 fstate_generator.iml
+*.g.dart

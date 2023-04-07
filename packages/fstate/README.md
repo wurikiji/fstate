@@ -29,13 +29,12 @@
   - [x] Code Generator
 - [x] Future selector
   - [x] Code Generator
+- [x] Future action
+  - [x] Code Generator
 - [ ] Family
   - [ ] Template test
   - [ ] Code Generator
 - [ ] State from the selector
-  - [ ] Template test
-  - [ ] Code Generator
-- [ ] Future/Stream action
   - [ ] Template test
   - [ ] Code Generator
 - [ ] Error/Loading widget builder
@@ -44,7 +43,7 @@
 - [ ] Widget life cycle
   - [ ] Template test
   - [ ] Code Generator
-- [ ] Observer "Side-effect"
+- [ ] Observer - "Side-effect"
   - [ ] Template test
   - [ ] Code Generator
 - [ ] Testability
