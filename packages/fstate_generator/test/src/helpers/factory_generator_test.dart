@@ -63,7 +63,7 @@ final factoryGenerators = [
     alternators: [
       AlternatorArg(
         target: 'counter',
-        name: 'debounceOneSecond',
+        alternatorName: 'debounceOneSecond',
       ),
     ],
   ),

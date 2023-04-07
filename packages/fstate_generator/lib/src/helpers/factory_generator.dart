@@ -20,11 +20,12 @@ class FstateFactoryGenerator {
   String toString() {
     final familyParams =
         params.where((element) => element.defaultValue == null);
+    final constructorParams = joinParamsToNamedParams(familyParams);
     return '''
 class \$$baseName extends FstateFactory<$type> {
-  \$$baseName({
-    ${joinParamsToNamedParams(familyParams)}
-  }) : stateKey = ${baseName.toKeyName()}(${joinParamsToNamedArguments(familyParams)});
+  \$$baseName(
+    ${constructorParams.isNotEmpty ? '{$constructorParams}' : ''}
+) : stateKey = ${baseName.toKeyName()}(${joinParamsToNamedArguments(familyParams)});
 
   @override
   final FstateKey stateKey;
@@ -51,14 +52,16 @@ String joinParamsToFstateFactoryParams(List<ParameterWithMetadata> params) {
 }
 
 String joinAlternatorsToMap(List<AlternatorArg> alternators) {
-  return alternators.map((e) => '#${e.target}: ${e.name}').join(',\n');
+  return alternators
+      .map((e) => '#${e.target}: ${e.alternatorName}')
+      .join(',\n');
 }
 
 class AlternatorArg {
   AlternatorArg({
     required this.target,
-    required this.name,
+    required this.alternatorName,
   });
   final String target;
-  final String name;
+  final String alternatorName;
 }

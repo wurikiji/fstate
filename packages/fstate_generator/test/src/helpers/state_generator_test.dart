@@ -100,17 +100,17 @@ Counter decrement() {
     test('can generate an extended state', () async {
       final targets = [
         ExtendedStateGenerator(
-          name: 'Counter',
+          baseName: 'Counter',
           constructorParams: <ParameterWithMetadata>[],
         ),
         ExtendedStateGenerator(
-          name: 'Counter',
-          constructor: 'new',
+          baseName: 'Counter',
+          constructor: 'Counter.new',
           constructorParams: <ParameterWithMetadata>[],
         ),
         ExtendedStateGenerator(
-          name: 'Counter',
-          constructor: 'new',
+          baseName: 'Counter',
+          constructor: 'Counter.new',
           constructorParams: <ParameterWithMetadata>[
             ParameterWithMetadata.positional(
               name: 'value',
@@ -121,8 +121,8 @@ Counter decrement() {
           ],
         ),
         ExtendedStateGenerator(
-          name: 'Counter',
-          constructor: 'new',
+          baseName: 'Counter',
+          constructor: 'Counter',
           constructorParams: <ParameterWithMetadata>[],
           actions: actions,
         ),
@@ -132,7 +132,7 @@ Counter decrement() {
 class _Counter implements Counter {
   _Counter({
     required this.$setNextState,
-  }) : _state = Counter.new();
+  }) : _state = Counter();
 
   _Counter.from({
     required this.$setNextState,
@@ -178,7 +178,7 @@ class _Counter implements Counter {
 class _Counter implements Counter {
   _Counter({
     required this.$setNextState,
-  }) : _state = Counter.new();
+  }) : _state = Counter();
 
   _Counter.from({
     required this.$setNextState,
@@ -235,7 +235,7 @@ Counter decrement() {
       ];
 
       for (var i = 0; i < targets.length; i++) {
-        expect(targets[i].generate().format(), expected[i].format());
+        expect(targets[i].toString().format(), expected[i].format());
       }
     });
   });

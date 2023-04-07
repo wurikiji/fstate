@@ -2,33 +2,35 @@ import 'parameter.dart';
 
 class ExtendedStateGenerator {
   ExtendedStateGenerator({
-    required this.name,
+    required this.baseName,
     this.actions = const [],
-    this.constructor = 'new',
+    String? constructor,
     this.constructorParams = const [],
-  }) : assert(name.isNotEmpty, 'name should not be empty');
+  })  : constructor = constructor ?? baseName,
+        assert(baseName.isNotEmpty, 'name should not be empty');
 
-  final String name;
+  final String baseName;
   final String constructor;
   final List<ParameterWithMetadata> constructorParams;
   final List<StateAction> actions;
 
-  String generate() {
-    final stateActions = actions.map((e) => e.generate('_$name')).join();
+  @override
+  String toString() {
+    final stateActions = actions.map((e) => e.generate('_$baseName')).join();
     return '''
-class _$name implements $name {
-  _$name({
+class _$baseName implements $baseName {
+  _$baseName({
     required this.\$setNextState,
     ${joinParamsToNamedParams(constructorParams)}
-  }) : _state = $name.$constructor(${joinParamsWithMetadataToArguments(constructorParams)});
+  }) : _state = $constructor(${joinParamsWithMetadataToArguments(constructorParams)});
 
-  _$name.from({
+  _$baseName.from({
     required this.\$setNextState,
-    required $name \$state,
+    required $baseName \$state,
   }) : _state = \$state;
 
-  final void Function($name) \$setNextState;
-  final $name _state;
+  final void Function($baseName) \$setNextState;
+  final $baseName _state;
 
   $stateActions
 }

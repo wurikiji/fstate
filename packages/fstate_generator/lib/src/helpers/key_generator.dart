@@ -14,7 +14,8 @@ class FstateKeyGenerator {
   final String stateType;
   final List<Parameter> params;
 
-  String _generateKey() {
+  @override
+  String toString() {
     final keyName = baseName.toKeyName();
     return '''
 class $keyName extends FstateKey {
@@ -33,11 +34,6 @@ $keyName({
   [${joinParamNames(params)}]
 );
 ''';
-  }
-
-  @override
-  String toString() {
-    return _generateKey();
   }
 }
 
