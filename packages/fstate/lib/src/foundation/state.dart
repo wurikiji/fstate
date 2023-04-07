@@ -46,7 +46,6 @@ abstract class FstateFactory {
         firstState.then((value) => manualSubject..add(value));
         return manualSubject;
       }
-
       return manualSubject..add(firstState);
     }
 
@@ -78,7 +77,11 @@ abstract class FstateFactory {
       return derivedState;
     });
 
-    return MergeStream([refreshStream, manualSubject]).asBroadcastStream();
+    BehaviorSubject mergedSubject = BehaviorSubject()
+      ..addStream(
+        MergeStream([refreshStream, manualSubject]).asBroadcastStream(),
+      );
+    return mergedSubject;
   }
 
   dynamic _constructState(

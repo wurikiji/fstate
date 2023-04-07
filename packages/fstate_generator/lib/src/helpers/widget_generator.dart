@@ -20,7 +20,8 @@ class FstateWidgetGenerator {
     final familyParams = params.where(
       (element) => !element.autoInject,
     );
-    final constructorParams = joinParamsToNamedParams(familyParams);
+    final constructorParams = paramsToFieldsInConstructor(familyParams);
+    final fields = paramsToFinalFields(familyParams);
     return '''
 class ${baseName.extendedWidget} extends FstateWidget {
   const ${baseName.extendedWidget}(
@@ -29,6 +30,8 @@ class ${baseName.extendedWidget} extends FstateWidget {
       ${constructorParams.isNotEmpty ? constructorParams : ''}
     }
   );
+
+  $fields
 
   @override
   Function get widgetBuilder => $widgetBuilder;
@@ -63,4 +66,15 @@ extension ToFstateWidgetParam on ParameterWithMetadata {
     }
     return 'Param.named(#$name, $value)';
   }
+}
+
+String paramsToFinalFields(Iterable<ParameterWithMetadata> params) {
+  return params.map((e) => 'final ${e.type} ${e.name};').join();
+}
+
+String paramsToFieldsInConstructor(Iterable<ParameterWithMetadata> params) {
+  return params
+      .map((e) =>
+          '${e.isRequired ? 'required' : ''} this.${e.name} ${e.defaultValue != null ? '= $e.defaultValue' : ''}')
+      .join(',');
 }
