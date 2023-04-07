@@ -29,9 +29,9 @@ abstract class FstateWidget extends StatelessWidget {
       ),
     );
 
-    final refreshStream = CombineLatestStream.list<Param>(builtDeps.map((e) {
+    final refreshStream = CombineLatestStream.list(builtDeps.map((e) {
       final alternator = alternators[e.key];
-      return applyAlternator(e.value, alternator) as Stream<Param>;
+      return applyAlternator(e.value, alternator);
     }));
 
     return StreamBuilder(
@@ -42,7 +42,7 @@ abstract class FstateWidget extends StatelessWidget {
         }
         return _constructWidget([
           ...manualInputs,
-          ...deps.data as Iterable<Param>,
+          ...(deps.data!.whereType<Param>()),
         ]);
       },
     );

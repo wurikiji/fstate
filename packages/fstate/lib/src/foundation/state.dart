@@ -78,5 +78,5 @@ abstract class FstateFactory<T> {
 }
 
 Stream applyAlternator(Stream source, Alternator? alternator) {
-  return alternator?.call(source) ?? source;
+  return (alternator?.call(source) ?? source);
 }
