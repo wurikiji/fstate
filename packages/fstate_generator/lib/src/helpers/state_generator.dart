@@ -1,3 +1,5 @@
+import 'package:fstate_generator/src/helpers/field.dart';
+
 import 'parameter.dart';
 
 class ExtendedStateGenerator {
@@ -6,17 +8,20 @@ class ExtendedStateGenerator {
     this.actions = const [],
     String? constructor,
     this.constructorParams = const [],
+    this.fields = const [],
   })  : constructor = constructor ?? baseName,
         assert(baseName.isNotEmpty, 'name should not be empty');
 
   final String baseName;
   final String constructor;
   final List<ParameterWithMetadata> constructorParams;
-  final List<StateAction> actions;
+  final List<FstateAction> actions;
+  final List<FstateField> fields;
 
   @override
   String toString() {
     final stateActions = actions.map((e) => e.generate('_$baseName')).join();
+    final overrideFields = fields.map((e) => e.proxyFieldTo('_state')).join();
     return '''
 class _$baseName implements $baseName {
   _$baseName({
@@ -32,21 +37,23 @@ class _$baseName implements $baseName {
   final void Function($baseName) \$setNextState;
   final $baseName _state;
 
+  $overrideFields
+
   $stateActions
 }
 ''';
   }
 }
 
-abstract class StateAction {
-  StateAction({
+abstract class FstateAction {
+  FstateAction({
     required this.name,
     required this.returnType,
     this.params = const [],
   })  : assert(name.isNotEmpty, 'name should not be empty'),
         assert(returnType.isNotEmpty, 'returnType should not be empty');
 
-  factory StateAction.field({
+  factory FstateAction.field({
     required String name,
     required String returnType,
   }) =>
@@ -55,7 +62,7 @@ abstract class StateAction {
         returnType: returnType,
       );
 
-  factory StateAction.setter({
+  factory FstateAction.setter({
     required String name,
     required String returnType,
   }) =>
@@ -64,7 +71,7 @@ abstract class StateAction {
         returnType: returnType,
       );
 
-  factory StateAction.method({
+  factory FstateAction.method({
     required String name,
     required String returnType,
     List<ParameterWithMetadata> params = const [],
@@ -75,7 +82,7 @@ abstract class StateAction {
         params: params,
       );
 
-  factory StateAction.emitter({
+  factory FstateAction.emitter({
     required String name,
     required String returnType,
     List<ParameterWithMetadata> params = const [],
@@ -93,7 +100,7 @@ abstract class StateAction {
   String generate(String stateName);
 }
 
-class FieldStateAction extends StateAction {
+class FieldStateAction extends FstateAction {
   FieldStateAction({
     required String name,
     required String returnType,
@@ -114,7 +121,7 @@ $setter
   }
 }
 
-class SetterStateAction extends StateAction {
+class SetterStateAction extends FstateAction {
   SetterStateAction({
     required String name,
     required String returnType,
@@ -135,7 +142,7 @@ set $name($returnType \$value) {
   }
 }
 
-class MethodStateAction extends StateAction {
+class MethodStateAction extends FstateAction {
   MethodStateAction({
     required String name,
     required String returnType,
@@ -159,7 +166,7 @@ $returnType $name(${joinParamsWithMetadata(params)}) {
   }
 }
 
-class EmitterStateAction extends StateAction {
+class EmitterStateAction extends FstateAction {
   EmitterStateAction({
     required String name,
     required String returnType,

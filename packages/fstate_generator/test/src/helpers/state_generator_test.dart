@@ -7,19 +7,19 @@ import '../dart_format_extension.dart';
 void main() {
   group('Extended State Generator', () {
     final actions = [
-      StateAction.field(
+      FstateAction.field(
         name: 'count',
         returnType: 'int',
       ),
-      StateAction.setter(
+      FstateAction.setter(
         name: 'value',
         returnType: 'String',
       ),
-      StateAction.method(
+      FstateAction.method(
         name: 'increment',
         returnType: 'void',
       ),
-      StateAction.method(
+      FstateAction.method(
         name: 'multiply',
         returnType: 'int',
         params: [
@@ -31,7 +31,7 @@ void main() {
           ),
         ],
       ),
-      StateAction.method(
+      FstateAction.method(
         name: 'divide',
         returnType: 'double',
         params: [
@@ -44,7 +44,7 @@ void main() {
           ),
         ],
       ),
-      StateAction.emitter(
+      FstateAction.emitter(
         name: 'decrement',
         returnType: 'Counter',
       ),
