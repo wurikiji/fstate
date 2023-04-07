@@ -15,6 +15,7 @@ void main() {
             type: 'Counter',
             name: 'counter',
             position: 0,
+            autoInject: true,
           ),
         ],
       ),
@@ -25,6 +26,7 @@ void main() {
           ParameterWithMetadata.named(
             type: 'Counter',
             name: 'counter',
+            autoInject: true,
           ),
         ],
       ),
@@ -36,11 +38,13 @@ void main() {
             type: 'Counter',
             name: 'counter',
             position: 0,
+            autoInject: true,
           ),
           ParameterWithMetadata.named(
             type: 'int',
             name: 'salt',
             defaultValue: '10',
+            autoInject: true,
           ),
         ],
       )

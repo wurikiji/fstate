@@ -2,11 +2,13 @@ class Parameter {
   Parameter({
     required this.type,
     required this.name,
+    required this.autoInject,
     this.defaultValue,
   });
   final String type;
   final String name;
   final String? defaultValue;
+  final bool autoInject;
 
   bool get isOptional => type.endsWith('?') || defaultValue != null;
 
@@ -25,10 +27,6 @@ class Parameter {
   String toPositionalArgument() {
     return name;
   }
-
-  String toFstateFactoryParam() {
-    return 'Param.named(#$name, ${defaultValue ?? name})';
-  }
 }
 
 class ParameterWithMetadata extends Parameter {
@@ -37,6 +35,7 @@ class ParameterWithMetadata extends Parameter {
     required super.type,
     required this.isPositional,
     required this.position,
+    required super.autoInject,
     super.defaultValue,
   }) : assert(!isPositional || position >= 0,
             'positional parameter\'s position should be >= 0');
@@ -45,6 +44,7 @@ class ParameterWithMetadata extends Parameter {
     required String name,
     required String type,
     required int position,
+    required bool autoInject,
     String? defaultValue,
   }) : this._(
           name: name,
@@ -52,11 +52,13 @@ class ParameterWithMetadata extends Parameter {
           defaultValue: defaultValue,
           isPositional: true,
           position: position,
+          autoInject: autoInject,
         );
 
   ParameterWithMetadata.named({
     required String name,
     required String type,
+    required bool autoInject,
     String? defaultValue,
   }) : this._(
           name: name,
@@ -64,6 +66,7 @@ class ParameterWithMetadata extends Parameter {
           defaultValue: defaultValue,
           isPositional: false,
           position: -1,
+          autoInject: autoInject,
         );
 
   final bool isPositional;

@@ -31,20 +31,23 @@ final params = [
     type: 'int',
     defaultValue: '0',
     position: 0,
+    autoInject: false,
   ),
   ParameterWithMetadata.positional(
     name: 'value2',
     type: 'int',
     position: 0,
+    autoInject: false,
   ),
   ParameterWithMetadata.named(
     name: 'name',
     type: 'String',
+    autoInject: false,
   ),
   ParameterWithMetadata.named(
     name: 'counter',
     type: 'Counter',
-    defaultValue: r'$Counter()',
+    autoInject: true,
   ),
 ];
 final paramsExpected = [

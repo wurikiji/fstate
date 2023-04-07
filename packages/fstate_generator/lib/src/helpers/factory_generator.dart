@@ -18,8 +18,9 @@ class FstateFactoryGenerator {
 
   @override
   String toString() {
-    final familyParams =
-        params.where((element) => element.defaultValue == null);
+    final familyParams = params.where(
+      (element) => element.defaultValue == null && !element.autoInject,
+    );
     final constructorParams = joinParamsToNamedParams(familyParams);
     return '''
 class \$$baseName extends FstateFactory<$type> {
@@ -64,4 +65,11 @@ class AlternatorArg {
   });
   final String target;
   final String alternatorName;
+}
+
+extension ToFstateFactoryParam on Parameter {
+  String toFstateFactoryParam() {
+    final value = autoInject ? '\$$type()' : defaultValue ?? name;
+    return 'Param.named(#$name, $value)';
+  }
 }

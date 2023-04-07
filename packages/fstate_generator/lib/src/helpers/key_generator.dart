@@ -26,6 +26,7 @@ class $keyName extends FstateKey {
 
   String _generateKeyConstructor() {
     final keyName = baseName.toKeyName();
+    final params = this.params.where((element) => !element.autoInject);
     return '''
 $keyName({
   ${joinParamsToNamedParams(params)}
