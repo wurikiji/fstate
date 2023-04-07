@@ -1,6 +1,6 @@
 name: fstate_generator
 description: A starting point for Dart libraries or applications.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/wurikiji/fstate
 repository: https://github.com/wurikiji/fstate
 
@@ -23,7 +23,7 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  fstate: ">=0.1.0 <1.0.0"
+  fstate: ^0.1.1
   build_runner: ^2.3.3
   build_test: ^2.1.6
   lints: ^2.0.0
