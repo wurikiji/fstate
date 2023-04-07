@@ -1,3 +1,7 @@
+## 0.1.1+2
+
+ - **FIX**: state now returns broadcast stream.
+
 ## 0.1.1+1
 
  - **REFACTOR**: add const constructor to fstate widget.
