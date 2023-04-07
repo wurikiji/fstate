@@ -1,3 +1,7 @@
+## 0.1.1+3
+
+ - **FIX**: type casting error in state builder.
+
 ## 0.1.1+2
 
  - **FIX**: state now returns broadcast stream.
