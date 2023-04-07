@@ -225,14 +225,14 @@ packages:
       path: "../.."
       relative: true
     source: path
-    version: "0.2.1"
+    version: "0.3.0"
   fstate_generator:
     dependency: "direct dev"
     description:
       path: "../../../fstate_generator"
       relative: true
     source: path
-    version: "0.2.1"
+    version: "0.2.2"
   glob:
     dependency: transitive
     description:

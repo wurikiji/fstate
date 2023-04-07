@@ -60,20 +60,14 @@ class TodoListView extends StatelessWidget {
 @Fselector()
 onToggleFromStore(
   @Finject() TodoStore store,
-) {
-  return (int id) {
-    store.toggle(id);
-  };
-}
+) =>
+    store.toggle;
 
 @Fselector()
 onRemoveFromStore(
   @Finject() TodoStore store,
-) {
-  return (int id) {
-    store.remove(id);
-  };
-}
+) =>
+    store.remove;
 
 @Fwidget()
 class TodoTile extends StatelessWidget {
