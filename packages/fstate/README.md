@@ -31,15 +31,17 @@
   - [x] Code Generator
 - [x] Future action
   - [x] Code Generator
-- [ ] Family
+- [ ] State from the selector
   - [ ] Template test
   - [ ] Code Generator
-- [ ] State from the selector
+- [ ] Family
   - [ ] Template test
   - [ ] Code Generator
 - [ ] Error/Loading widget builder
   - [ ] Template test
   - [ ] Code Generator
+- [ ] Error Boundary Widget
+- [ ] Loading Boundary Widget
 - [ ] Widget life cycle
   - [ ] Template test
   - [ ] Code Generator
