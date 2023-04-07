@@ -18,9 +18,9 @@ class TodoStore {
 
   @Faction()
   void toggle(int id) {
-    final todo = todos.firstWhere((todo) => todo.id == id);
-    final index = todos.indexOf(todo);
-    todos[index] = Todo(title: todo.title, isDone: !todo.isDone);
+    final index = todos.indexWhere((todo) => todo.id == id);
+
+    todos[index] = todos[index].toggle();
   }
 
   @Faction()

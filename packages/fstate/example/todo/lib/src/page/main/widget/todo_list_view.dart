@@ -41,6 +41,10 @@ class TodoListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    for (var element in todos) {
+      print(
+          'id = ${element.id}, title = ${element.title}, isDone = ${element.isDone}');
+    }
     return ListView.separated(
       itemCount: todos.length,
       itemBuilder: (context, index) {

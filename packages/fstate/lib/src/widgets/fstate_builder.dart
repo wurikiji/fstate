@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:fstate/fstate.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract class FstateWidget extends StatelessWidget {
+abstract class FstateWidget extends StatefulWidget {
   const FstateWidget({super.key});
 
   List<Param> get params => [];
+
   Map<dynamic, Alternator> get alternators => {};
+
   Function get widgetBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    final manualInputs = params.where((e) => e.value is! FstateFactory);
-    final deps = params.where((e) => e.value is FstateFactory);
+  State<FstateWidget> createState() => _FstateWidgetState();
+}
+
+class _FstateWidgetState extends State<FstateWidget> {
+  late Widget child;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final manualInputs = widget.params.where((e) => e.value is! FstateFactory);
+    final deps = widget.params.where((e) => e.value is FstateFactory);
     if (deps.isEmpty) {
-      return _constructWidget(manualInputs);
+      child = _constructWidget(manualInputs);
+      return;
     }
     final container = FstateScope.containerOf(context);
     final builtDeps = deps.map(
@@ -30,11 +40,11 @@ abstract class FstateWidget extends StatelessWidget {
     );
 
     final refreshStream = CombineLatestStream.list(builtDeps.map((e) {
-      final alternator = alternators[e.key];
+      final alternator = widget.alternators[e.key];
       return applyAlternator(e.value, alternator);
     }));
 
-    return StreamBuilder(
+    child = StreamBuilder(
       stream: refreshStream,
       builder: (context, deps) {
         if (!deps.hasData) {
@@ -48,10 +58,15 @@ abstract class FstateWidget extends StatelessWidget {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
+
   Widget _constructWidget(Iterable<Param> params) {
     final positionalParams = convertToPositionalParams(params).toList();
     final namedParams = convertToNamedParams(params);
-    return Function.apply(widgetBuilder, positionalParams, namedParams)
+    return Function.apply(widget.widgetBuilder, positionalParams, namedParams)
         as Widget;
   }
 }
