@@ -19,7 +19,7 @@ class ExtendedStateGenerator {
 class _$name implements $name {
   _$name({
     required this.\$setNextState,
-    ${joinParamsToNamedParams(constructorParams.map((e) => e.parameter))}
+    ${joinParamsToNamedParams(constructorParams)}
   }) : _state = $name.$constructor(${joinParamsWithMetadataToArguments(constructorParams)});
 
   _$name.from({

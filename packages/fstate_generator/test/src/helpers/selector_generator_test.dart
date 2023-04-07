@@ -12,10 +12,8 @@ void main() {
         name: 'countSelector',
         params: [
           ParameterWithMetadata.positional(
-            parameter: Parameter(
-              type: 'Counter',
-              name: 'counter',
-            ),
+            type: 'Counter',
+            name: 'counter',
             position: 0,
           ),
         ],
@@ -25,11 +23,8 @@ void main() {
         name: 'countSelector',
         params: [
           ParameterWithMetadata.named(
-            parameter: Parameter(
-              type: 'Counter',
-              name: 'counter',
-            ),
-            isRequired: true,
+            type: 'Counter',
+            name: 'counter',
           ),
         ],
       ),
@@ -38,19 +33,14 @@ void main() {
         name: 'countSelector',
         params: [
           ParameterWithMetadata.positional(
-            parameter: Parameter(
-              type: 'Counter',
-              name: 'counter',
-            ),
+            type: 'Counter',
+            name: 'counter',
             position: 0,
           ),
           ParameterWithMetadata.named(
-            parameter: Parameter(
-              type: 'int',
-              name: 'salt',
-              defaultValue: '10',
-            ),
-            isRequired: true,
+            type: 'int',
+            name: 'salt',
+            defaultValue: '10',
           ),
         ],
       )

@@ -21,7 +21,7 @@ class ExtendedSelectorGenerator {
     return '''
 $returnType _$name({
   setNextState,
-  ${joinParamsToNamedParams(params.map((e) => e.parameter))}
+  ${joinParamsToNamedParams(params)}
 })
 ''';
   }

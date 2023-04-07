@@ -24,10 +24,8 @@ void main() {
         returnType: 'int',
         params: [
           ParameterWithMetadata.positional(
-            parameter: Parameter(
-              name: 'value',
-              type: 'int',
-            ),
+            name: 'value',
+            type: 'int',
             position: 0,
           ),
         ],
@@ -37,11 +35,9 @@ void main() {
         returnType: 'double',
         params: [
           ParameterWithMetadata.positional(
-            parameter: Parameter(
-              name: 'value',
-              type: 'int',
-              defaultValue: '0',
-            ),
+            name: 'value',
+            type: 'int',
+            defaultValue: '0',
             position: 0,
           ),
         ],
@@ -117,11 +113,9 @@ Counter decrement() {
           constructor: 'new',
           constructorParams: <ParameterWithMetadata>[
             ParameterWithMetadata.positional(
-              parameter: Parameter(
-                name: 'value',
-                type: 'int',
-                defaultValue: '0',
-              ),
+              name: 'value',
+              type: 'int',
+              defaultValue: '0',
               position: 0,
             ),
           ],

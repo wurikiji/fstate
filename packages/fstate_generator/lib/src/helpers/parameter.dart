@@ -25,43 +25,51 @@ class Parameter {
   String toPositionalArgument() {
     return name;
   }
+
+  String toFstateFactoryParam() {
+    return 'Param.named(#$name, ${defaultValue ?? name})';
+  }
 }
 
-class ParameterWithMetadata {
+class ParameterWithMetadata extends Parameter {
   ParameterWithMetadata._({
-    required this.parameter,
-    required this.isRequired,
+    required super.name,
+    required super.type,
     required this.isPositional,
     required this.position,
+    super.defaultValue,
   }) : assert(!isPositional || position >= 0,
             'positional parameter\'s position should be >= 0');
 
   ParameterWithMetadata.positional({
-    required Parameter parameter,
+    required String name,
+    required String type,
     required int position,
+    String? defaultValue,
   }) : this._(
-          parameter: parameter,
+          name: name,
+          type: type,
+          defaultValue: defaultValue,
           isPositional: true,
-          isRequired: true,
           position: position,
         );
 
   ParameterWithMetadata.named({
-    required Parameter parameter,
-    required bool isRequired,
+    required String name,
+    required String type,
+    String? defaultValue,
   }) : this._(
-          parameter: parameter,
-          isRequired: isRequired,
+          name: name,
+          type: type,
+          defaultValue: defaultValue,
           isPositional: false,
           position: -1,
         );
 
-  final Parameter parameter;
-  final bool isRequired;
   final bool isPositional;
   final int position;
 
-  bool get isOptional => !isRequired;
+  bool get isRequired => !isOptional;
   bool get isNamed => !isPositional;
 }
 
@@ -73,17 +81,19 @@ String joinParamsToNamedParams(Iterable<Parameter> params) {
   return params.map((e) => e.toNamedParam()).join(',');
 }
 
+String joinParamsToNamedArguments(Iterable<Parameter> params) {
+  return params.map((e) => e.toNamedArgument()).join(',');
+}
+
 String joinParamsWithMetadataToArguments(
   Iterable<ParameterWithMetadata> params,
 ) {
   final positionals = params
       .where((e) => e.isPositional)
-      .map((e) => e.parameter.toPositionalArgument())
+      .map((e) => e.toPositionalArgument())
       .join(',');
-  final named = params
-      .where((e) => e.isNamed)
-      .map((e) => e.parameter.toNamedArgument())
-      .join(',');
+  final named =
+      params.where((e) => e.isNamed).map((e) => e.toNamedArgument()).join(',');
   return '''
   ${positionals.isNotEmpty ? '$positionals,' : ''}
   $named
@@ -94,21 +104,19 @@ String joinParamsWithMetadata(
   Iterable<ParameterWithMetadata> params,
 ) {
   final positionals =
-      (params.where((e) => e.isPositional && !e.parameter.isOptional).toList()
+      (params.where((e) => e.isPositional && !e.isOptional).toList()
             ..sort((a, b) => a.position.compareTo(b.position)))
-          .map((e) => e.parameter.toPositionalParam())
+          .map((e) => e.toPositionalParam())
           .join(',');
 
   final optionals =
-      (params.where((e) => e.isPositional && e.parameter.isOptional).toList()
+      (params.where((e) => e.isPositional && e.isOptional).toList()
             ..sort((a, b) => a.position.compareTo(b.position)))
-          .map((e) => e.parameter.toPositionalParam())
+          .map((e) => e.toPositionalParam())
           .join(',');
 
-  final named = params
-      .where((e) => e.isNamed)
-      .map((e) => e.parameter.toNamedParam())
-      .join(',');
+  final named =
+      params.where((e) => e.isNamed).map((e) => e.toNamedParam()).join(',');
   return '''
   ${positionals.isNotEmpty ? '$positionals,' : ''}
   ${optionals.isNotEmpty ? '[$optionals]' : ''}
