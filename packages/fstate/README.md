@@ -1,39 +1,64 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# FState - Flutter-first State Management
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+## Separation of State and UI | f(state) = UI
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+# Contributions
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Run test
 
-## Features
+### Install dependencies for tests
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```bash
+dart pub global activate coverage
+dart pub global activate full_coverage
 ```
 
-## Additional information
+and install `lcov` and `genhtml` for coverage report.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+### Run tests
+
+Each package has `scripts/run_test.sh` to run tests.
+
+### Coverage
+
+# Features
+
+- [ ]: Simple injection
+  - [x]: Template test
+  - [x]: Code Generator
+- [ ]: Family
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Simple selector
+  - [x]: Template test
+  - [x]: Code Generator
+- [ ]: Simple alternator
+  - [x]: Template test
+  - [x]: Code Generator
+- [ ]: Simple widget builder
+  - [x]: Template test
+  - [x]: Code Generator
+- [ ]: State from the selector
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Future/Stream selector
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Future/Stream action
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Error/Loading widget builder
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Widget life cycle
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Observer "Side-effect"
+  - [ ]: Template test
+  - [ ]: Code Generator
+- [ ]: Testability
+  - [ ]: Overridable
+  - [ ]: State only test
+  - [ ]: Widget test
+- [ ]: Reset state
+- [ ]: State Debug Tool
