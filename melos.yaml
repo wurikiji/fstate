@@ -4,7 +4,7 @@ repository: https://github.com/wurikiji/fstate.git
 
 packages:
   - packages/*
-  - examples/*
+  - packages/fstate/example/*
 
 command:
   bootstrap:
