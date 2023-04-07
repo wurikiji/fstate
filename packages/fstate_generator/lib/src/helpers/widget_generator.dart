@@ -23,7 +23,7 @@ class FstateWidgetGenerator {
     final constructorParams = joinParamsToNamedParams(familyParams);
     return '''
 class ${baseName.extendedWidget} extends FstateWidget {
-  ${baseName.extendedWidget}(
+  const ${baseName.extendedWidget}(
     {
       super.key,
       ${constructorParams.isNotEmpty ? constructorParams : ''}

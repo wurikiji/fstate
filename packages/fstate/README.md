@@ -21,7 +21,7 @@ Each package has `scripts/run_test.sh` to run tests.
 
 ### Coverage
 
-# Features
+# TODO
 
 - [ ]: Simple injection
   - [x]: Template test
@@ -62,3 +62,5 @@ Each package has `scripts/run_test.sh` to run tests.
   - [ ]: Widget test
 - [ ]: Reset state
 - [ ]: State Debug Tool
+- [ ]: Enhance DX
+  - [ ]: hot reload
