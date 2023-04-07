@@ -1,3 +1,9 @@
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: future selector.
+
 ## 0.1.1+3
 
  - **FIX**: type casting error in state builder.
