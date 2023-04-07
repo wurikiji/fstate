@@ -3,6 +3,10 @@ targets:
     builders:
       fstate_generator:core_generator:
         enabled: true
+      source_gen:combining_builder:
+        options:
+          ignore_for_file:
+            - unused_local_variable
 
 builders:
   core_generator:
