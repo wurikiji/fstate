@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+ - **REFACTOR**: add const constructor to fstate widget.
+
 ## 0.1.1
 
  - **FEAT**: pass simple injection.
