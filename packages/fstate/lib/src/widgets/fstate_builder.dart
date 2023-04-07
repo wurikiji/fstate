@@ -17,14 +17,13 @@ abstract class FstateWidget extends StatefulWidget {
 
 class _FstateWidgetState extends State<FstateWidget> {
   late Widget child;
+
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Widget build(BuildContext context) {
     final manualInputs = widget.params.where((e) => e.value is! FstateFactory);
     final deps = widget.params.where((e) => e.value is FstateFactory);
     if (deps.isEmpty) {
-      child = _constructWidget(manualInputs);
-      return;
+      return _constructWidget(manualInputs);
     }
     final container = FstateScope.containerOf(context);
     final builtDeps = deps.map(
@@ -44,7 +43,7 @@ class _FstateWidgetState extends State<FstateWidget> {
       return applyAlternator(e.value, alternator);
     }));
 
-    child = StreamBuilder(
+    return StreamBuilder(
       stream: refreshStream,
       builder: (context, deps) {
         if (!deps.hasData) {
@@ -56,11 +55,6 @@ class _FstateWidgetState extends State<FstateWidget> {
         ]);
       },
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return child;
   }
 
   Widget _constructWidget(Iterable<Param> params) {

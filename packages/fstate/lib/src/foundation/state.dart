@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:fstate/fstate.dart';
 import 'package:rxdart/rxdart.dart';
-
-import '../utils/equality.dart';
 
 class FstateKey {
   FstateKey(this._type, this._params);
@@ -13,7 +12,7 @@ class FstateKey {
   @override
   bool operator ==(Object? other) {
     return identical(this, other) ||
-        (other is FstateKey && areTwoListsSame(_params, other._params));
+        (other is FstateKey && listEquals(_params, other._params));
   }
 
   @override
