@@ -1,5 +1,5 @@
 name: fstate_generator
-description: A starting point for Dart libraries or applications.
+description: A dart code generator for fstate. See fstate for details.
 version: 0.1.1
 homepage: https://github.com/wurikiji/fstate
 repository: https://github.com/wurikiji/fstate
