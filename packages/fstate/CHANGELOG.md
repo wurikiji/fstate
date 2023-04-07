@@ -1,3 +1,11 @@
+## 0.3.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: remove unnecessary rebuild.
+ - **FIX**: widget input, skipped state action.
+ - **BREAKING** **FIX**: rebuild mitigation.
+
 ## 0.2.1
 
  - **FEAT**: async actions.

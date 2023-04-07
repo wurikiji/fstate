@@ -1,3 +1,8 @@
+## 0.2.2
+
+ - **FIX**: widget input, skipped state action.
+ - **FEAT**: generate normal field overrider for fstate.
+
 ## 0.2.1
 
  - **FEAT**: async actions.
