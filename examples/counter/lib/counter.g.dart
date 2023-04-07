@@ -33,7 +33,7 @@ class _Counter implements Counter {
   }
 }
 
-class $Counter extends FstateFactory<Counter> {
+class $Counter extends FstateFactory {
   $Counter() : stateKey = _CounterKey();
 
   @override

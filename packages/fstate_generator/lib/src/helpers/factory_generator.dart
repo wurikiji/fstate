@@ -27,7 +27,7 @@ class FstateFactoryGenerator {
     final constructorParams = joinParamsToNamedParams(familyParams);
     final factoryName = '\$${baseName.pascalCase}';
     return '''
-class $factoryName extends FstateFactory<$type> {
+class $factoryName extends FstateFactory {
   $factoryName(
     ${constructorParams.isNotEmpty ? '{$constructorParams}' : ''}
 ) : stateKey = ${baseName.toKeyName()}(${joinParamsToNamedArguments(familyParams)});

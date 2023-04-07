@@ -63,7 +63,7 @@ class FstateConsumer<T> extends StatelessWidget {
     super.key,
   });
 
-  final FstateFactory<T> fstate;
+  final FstateFactory fstate;
   final Widget Function(BuildContext context, T data) builder;
 
   @override

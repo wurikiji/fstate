@@ -1,25 +1,17 @@
 # FState - Flutter-first State Management
 
-## Separation of State and UI | f(state) = UI
+# Table of Contents
 
-# Contributions
+- [FState - Flutter-first State Management](#fstate---flutter-first-state-management)
+  - [Separation of State and UI](#separation-of-state-and-ui)
+- [TODO](#todo)
+- [Contributions](#contributions)
+  - [Run test](#run-test)
+    - [Install dependencies for tests](#install-dependencies-for-tests)
+    - [Run tests](#run-tests)
+    - [Coverage](#coverage)
 
-## Run test
-
-### Install dependencies for tests
-
-```bash
-dart pub global activate coverage
-dart pub global activate full_coverage
-```
-
-and install `lcov` and `genhtml` for coverage report.
-
-### Run tests
-
-Each package has `scripts/run_test.sh` to run tests.
-
-### Coverage
+## Separation of State and UI
 
 # TODO
 
@@ -35,13 +27,12 @@ Each package has `scripts/run_test.sh` to run tests.
 - [x] Simple widget builder
   - [x] Template test
   - [x] Code Generator
+- [x] Future selector
+  - [x] Code Generator
 - [ ] Family
   - [ ] Template test
   - [ ] Code Generator
 - [ ] State from the selector
-  - [ ] Template test
-  - [ ] Code Generator
-- [ ] Future/Stream selector
   - [ ] Template test
   - [ ] Code Generator
 - [ ] Future/Stream action
@@ -64,3 +55,22 @@ Each package has `scripts/run_test.sh` to run tests.
 - [ ] State Debug Tool
 - [ ] Enhance DX
   - [ ] hot reload
+
+# Contributions
+
+## Run test
+
+### Install dependencies for tests
+
+```bash
+dart pub global activate coverage
+dart pub global activate full_coverage
+```
+
+and install `lcov` and `genhtml` for coverage report.
+
+### Run tests
+
+Each package has `scripts/run_test.sh` to run tests.
+
+### Coverage

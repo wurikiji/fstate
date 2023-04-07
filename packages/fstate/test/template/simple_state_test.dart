@@ -251,7 +251,7 @@ class _Counter implements Counter {
   }
 }
 
-class $Counter extends FstateFactory<Counter> {
+class $Counter extends FstateFactory {
   $Counter({
     this.value = 0,
   }) : stateKey = _CounterKey(
@@ -320,7 +320,7 @@ _countSelector({
 }) =>
     countSelector(counter);
 
-class $CountSelector extends FstateFactory<int> {
+class $CountSelector extends FstateFactory {
   $CountSelector() : stateKey = _CountSelectorKey();
 
   @override
@@ -339,7 +339,7 @@ class _CountSelectorKey extends FstateKey {
   _CountSelectorKey() : super(int, [countSelector]);
 }
 
-class $IncreaseSelector extends FstateFactory<void Function()> {
+class $IncreaseSelector extends FstateFactory {
   $IncreaseSelector() : stateKey = _IncreaseSelectorKey();
 
   @override
@@ -363,7 +363,7 @@ class _IncreaseSelectorKey extends FstateKey {
   _IncreaseSelectorKey() : super(Function, [increaseSelector]);
 }
 
-class $DebouncedCount extends FstateFactory<int> {
+class $DebouncedCount extends FstateFactory {
   $DebouncedCount() : stateKey = _DebouncedCountKey();
 
   @override

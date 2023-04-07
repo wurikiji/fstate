@@ -63,12 +63,12 @@ Stream throttleOnceASecond(Stream stream) {
 }
 
 @Fselector()
-int countSelector(
+Future<int> countSelector(
   @Finject(
     alternator: throttleOnceASecond,
   )
       Counter counter,
-) {
+) async {
   return counter.count;
 }
 

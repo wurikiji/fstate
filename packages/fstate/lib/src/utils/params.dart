@@ -46,13 +46,13 @@ typedef ParamConstructor = Param<V> Function<V>(dynamic key, V value);
 /// TODO: seperate query and command
 /// query: Get stream if present
 /// command: Put stream if absent
-Param<Stream<Param<V>>> calculateFstateFactoryParam<V>(
+Param<Stream<Param>> calculateFstateFactoryParam(
   FstateStreamContainer container,
   Param param,
   ParamConstructor paramConstructor,
 ) {
-  final factory = param.value as FstateFactory<V>;
-  final value = (container.get<V>(factory.stateKey) ??
+  final factory = param.value as FstateFactory;
+  final value = (container.get(factory.stateKey) ??
           container.put(
             factory.stateKey,
             factory.createStateStream(container),

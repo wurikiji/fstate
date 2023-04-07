@@ -222,19 +222,17 @@ packages:
   fstate:
     dependency: "direct main"
     description:
-      name: fstate
-      sha256: "0374cab59606d481d06a46cf0751a97c9d2c3e4ffa0af1a92e05832cb20d7c74"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
+      path: "../../packages/fstate"
+      relative: true
+    source: path
+    version: "0.1.1+3"
   fstate_generator:
     dependency: "direct dev"
     description:
-      name: fstate_generator
-      sha256: "810542df270f81b5398eac9efaff30cba7dfb6c6fd038c3a2400ede157dcd4b9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
+      path: "../../packages/fstate_generator"
+      relative: true
+    source: path
+    version: "0.1.1+1"
   glob:
     dependency: transitive
     description:
@@ -530,4 +528,3 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.19.6 <3.0.0"
-  flutter: ">=1.17.0"

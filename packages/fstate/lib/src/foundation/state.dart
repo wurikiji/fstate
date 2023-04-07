@@ -23,7 +23,7 @@ class FstateKey {
   String toString() => 'A key for $_type';
 }
 
-abstract class FstateFactory<T> {
+abstract class FstateFactory {
   const FstateFactory();
 
   FstateKey get stateKey;
@@ -32,15 +32,20 @@ abstract class FstateFactory<T> {
   List<Param> get params => [];
   Map<dynamic, Alternator> get alternators => {};
 
-  Stream<T> createStateStream(FstateStreamContainer container) {
+  Stream createStateStream(FstateStreamContainer container) {
     final manualInputs = params.where((e) => e.value is! FstateFactory);
     final deps = params.where((e) => e.value is FstateFactory);
-    final manualSubject = BehaviorSubject<T>();
+    final manualSubject = BehaviorSubject();
 
     if (deps.isEmpty) {
       final firstState = _constructState(manualInputs, (state) {
         manualSubject.add(state);
       });
+
+      if (firstState is Future) {
+        firstState.then((value) => manualSubject..add(value));
+        return manualSubject;
+      }
 
       return manualSubject..add(firstState);
     }
@@ -60,16 +65,24 @@ abstract class FstateFactory<T> {
       return applyAlternator(e.value, alternator);
     });
 
-    final refreshStream = CombineLatestStream.list(builtDeps).map<T>((e) {
-      return _constructState([...manualInputs, ...e], (T state) {
+    final refreshStream =
+        CombineLatestStream.list(builtDeps).asyncMap((e) async {
+      final derivedState = _constructState([...manualInputs, ...e], (state) {
         manualSubject.add(state);
       });
+      if (derivedState is Future) {
+        // ignore: await_only_futures, unnecessary_cast
+        return await (derivedState as Future);
+      }
+
+      return derivedState;
     });
 
     return MergeStream([refreshStream, manualSubject]).asBroadcastStream();
   }
 
-  T _constructState(Iterable<Param> params, void Function(T) setNextState) {
+  dynamic _constructState(
+      Iterable<Param> params, void Function(dynamic) setNextState) {
     final positionalParams = convertToPositionalParams(params).toList();
     final namedParams = convertToNamedParams(params);
     namedParams[#$setNextState] = setNextState;

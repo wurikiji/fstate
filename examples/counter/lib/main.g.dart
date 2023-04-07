@@ -42,14 +42,15 @@ class $ThrottledCounterWidget extends FstateWidget {
 
 class _CountSelectorKey extends FstateKey {
   _CountSelectorKey({Function countSelector = countSelector})
-      : super(int, [countSelector]);
+      : super(Future<int>, [countSelector]);
 }
 
-int _countSelector({$setNextState, required Counter counter}) => countSelector(
+Future<int> _countSelector({$setNextState, required Counter counter}) =>
+    countSelector(
       counter,
     );
 
-class $CountSelector extends FstateFactory<int> {
+class $CountSelector extends FstateFactory {
   $CountSelector() : stateKey = _CountSelectorKey();
 
   @override
