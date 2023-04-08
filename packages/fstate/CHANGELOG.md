@@ -1,3 +1,9 @@
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: [#2](https://github.com/wurikiji/fstate.git/issues/2) state from selectors.
+
 ## 0.3.0
 
 > Note: This release has breaking changes.
