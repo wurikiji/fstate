@@ -16,7 +16,7 @@ addTodoSelector(
 class TodoInputField extends StatelessWidget {
   @Fconstructor()
   const TodoInputField({
-    @Finject(derivedFrom: addTodoSelector) required this.addTodo,
+    @Finject(from: addTodoSelector) required this.addTodo,
     super.key,
   });
 

@@ -1,44 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fstate/fstate.dart';
 
-import '../../../logic/todo_store.dart';
+import '../../../models/todo_param.dart';
 import '../selectors/todo_store_selector.dart';
 
 part 'todo_list_view.g.dart';
-
-class TodoParam {
-  const TodoParam({
-    required this.id,
-    required this.title,
-    required this.isDone,
-  });
-
-  final int id;
-  final String title;
-  final bool isDone;
-}
-
-@Fselector()
-todosFromStore(
-  @Finject(
-    derivedFrom: secondTodoStoreSelector,
-  )
-      TodoStore store,
-) {
-  return store.todos.map((todo) {
-    return TodoParam(
-      id: todo.id,
-      title: todo.title,
-      isDone: todo.isDone,
-    );
-  }).toList();
-}
 
 @Fwidget()
 class TodoListView extends StatelessWidget {
   @Fconstructor()
   const TodoListView({
-    @Finject(derivedFrom: todosFromStore) this.todos = const [],
+    @injectTodoParams this.todos = const [],
     super.key,
   });
 
@@ -62,31 +34,13 @@ class TodoListView extends StatelessWidget {
   }
 }
 
-@Fselector()
-onToggleFromStore(
-  @Finject(
-    derivedFrom: secondTodoStoreSelector,
-  )
-      TodoStore store,
-) =>
-    store.toggle;
-
-@Fselector()
-onRemoveFromStore(
-  @Finject(
-    derivedFrom: secondTodoStoreSelector,
-  )
-      TodoStore store,
-) =>
-    store.remove;
-
 @Fwidget()
 class TodoTile extends StatelessWidget {
   @Fconstructor()
   const TodoTile({
     required this.todo,
-    @Finject(derivedFrom: onToggleFromStore) required this.onToggle,
-    @Finject(derivedFrom: onRemoveFromStore) required this.onRemove,
+    @injectOnToggle required this.onToggle,
+    @injectOnRemove required this.onRemove,
     super.key,
   });
 

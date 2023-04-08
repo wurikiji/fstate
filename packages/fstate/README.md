@@ -1,17 +1,12 @@
-> This is not production ready yet. Please wait for the first release.
+> This is not production ready. Please wait for the first release.
 
-# Table of Contents
+# Fstate - Flutter-first State Management
 
-- [FState - Flutter-first State Management](#fstate---flutter-first-state-management)
-  - [Separation of State and UI](#separation-of-state-and-ui)
-- [TODO](#todo)
-- [Contributions](#contributions)
-  - [Run test](#run-test)
-    - [Install dependencies for tests](#install-dependencies-for-tests)
-    - [Run tests](#run-tests)
-    - [Coverage](#coverage)
+This project is an experimental state management library for Flutter.
 
 # Separation of State and UI
+
+Develop state and UI separately and wire them up declaratively.
 
 ## f(state) = UI
 
@@ -42,11 +37,11 @@
 - [x] Async selector
 - [x] Async action
 - [x] State from the selector
+- [ ] Widget life cycle
 - [ ] Family
 - [ ] Error/Loading widget builder
 - [ ] Error Boundary Widget
 - [ ] Loading Boundary Widget
-- [ ] Widget life cycle
 - [ ] Observer - "Side-effect"
 - [ ] Testability
   - [ ] Overridable
