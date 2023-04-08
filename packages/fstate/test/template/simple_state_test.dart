@@ -83,7 +83,7 @@ class InjectedCounterWidget extends StatelessWidget {
 class CounterWidget extends StatelessWidget {
   @Fconstructor()
   const CounterWidget({
-    @Finject(derivedFrom: countSelector) required this.count,
+    @Finject(from: countSelector) required this.count,
     super.key,
   });
 
@@ -101,7 +101,7 @@ class CounterIncreaser extends StatelessWidget {
 
   @Fconstructor()
   const CounterIncreaser({
-    @Finject(derivedFrom: increaseSelector) required this.increaseCounter,
+    @Finject(from: increaseSelector) required this.increaseCounter,
     super.key,
   });
 
@@ -118,7 +118,7 @@ class CounterIncreaser extends StatelessWidget {
 class DebouncedCounterWidget extends StatelessWidget {
   @Fconstructor()
   const DebouncedCounterWidget({
-    @Finject(derivedFrom: debouncedCount) required this.count,
+    @Finject(from: debouncedCount) required this.count,
     super.key,
   });
 
