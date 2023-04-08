@@ -25,13 +25,17 @@ class Fwidget {
 typedef Alternator = Stream Function(Stream source);
 
 /// Annotate parameters to be auto-injected.
-///
-/// [derivedFrom]
-/// [alternator] should returns a same type of stream with source.
 @Target({TargetKind.parameter})
 class Finject {
   const Finject({this.derivedFrom, this.alternator});
+
+  /// If a constructor parameter is derived from a selector,
+  /// annotate the selector with [Fselector] and
+  /// give the selector's name to [derivedFrom].
   final Function? derivedFrom;
+
+  /// If you want to alter timing of the stream,
+  /// give an [Alternator] to [alternator].
   final Alternator? alternator;
 }
 

@@ -23,6 +23,17 @@ class ExtendedStateGenerator {
     final stateActions = actions.map((e) => e.generate('_$baseName')).join();
     final overrideFields = fields.map((e) => e.proxyFieldTo('_state')).join();
     return '''
+extension \$TodoStoreToFstate on $baseName {
+  DerivedFstateBuilder toFstate() {
+    return DerivedFstateBuilder(
+      (\$setNextState) => _$baseName.from(
+        \$state: this,
+        \$setNextState: \$setNextState,
+      ),
+    );
+  }
+}
+
 class _$baseName implements $baseName {
   _$baseName({
     required this.\$setNextState,

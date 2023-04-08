@@ -36,38 +36,18 @@
 # TODO
 
 - [x] Simple injection
-  - [x] Template test
-  - [x] Code Generator
 - [x] Simple selector
-  - [x] Template test
-  - [x] Code Generator
 - [x] Simple alternator
-  - [x] Template test
-  - [x] Code Generator
 - [x] Simple widget builder
-  - [x] Template test
-  - [x] Code Generator
-- [x] Future selector
-  - [x] Code Generator
-- [x] Future action
-  - [x] Code Generator
-- [ ] State from the selector
-  - [ ] Template test
-  - [ ] Code Generator
+- [x] Async selector
+- [x] Async action
+- [x] State from the selector
 - [ ] Family
-  - [ ] Template test
-  - [ ] Code Generator
 - [ ] Error/Loading widget builder
-  - [ ] Template test
-  - [ ] Code Generator
 - [ ] Error Boundary Widget
 - [ ] Loading Boundary Widget
 - [ ] Widget life cycle
-  - [ ] Template test
-  - [ ] Code Generator
 - [ ] Observer - "Side-effect"
-  - [ ] Template test
-  - [ ] Code Generator
 - [ ] Testability
   - [ ] Overridable
   - [ ] State only test
