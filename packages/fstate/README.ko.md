@@ -19,19 +19,7 @@
 
 ### No imperative dependency
 
-### No imperative reactivity
-
 ## Easy timing control
-
-## (TODO) Safe side-effect
-
-### On lifecycle
-
-### On Actions
-
-# (TODO) Fstate Inspector - Easy to Debug
-
-# (TODO) Definitely Declarative Routing - File-based
 
 # TODO
 
@@ -73,10 +61,9 @@
   - [ ] State only test
   - [ ] Widget test
 - [ ] Reset state
+- [ ] State Debug Tool
 - [ ] Enhance DX
   - [ ] hot reload
-  - [ ] State Inspector
-- [ ] File-based routing
 
 # Contributions
 
