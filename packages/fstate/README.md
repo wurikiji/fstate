@@ -2,7 +2,9 @@
 
 # Fstate - Flutter-first State Management
 
-This project is an experimental state management library for Flutter.
+This project is an experimental state management library
+for Flutter. You can find a roadmap
+[here](https://github.com/users/wurikiji/projects/2/views/1).
 
 # Separation of State and UI
 
@@ -26,7 +28,11 @@ Develop state and UI separately and wire them up declaratively.
 
 # (TODO) Fstate Inspector - Easy to Debug
 
-# (TODO) Definitely Declarative Routing - File-based
+# (TODO) Definitely Declarative Routing - File-based routing
+
+Router also has a state and is reactive
+to the state. Flutter provides declarative routing via Router API,
+but it's cumbersome to implement.
 
 # TODO
 
@@ -38,20 +44,23 @@ Develop state and UI separately and wire them up declaratively.
 - [x] Async action
 - [x] State from the selector
 - [ ] Widget life cycle
+- [ ] **Isolate-based**
+  - Since v3.7, flutter supports background isolate platform channels. This is a good opportunity to make fstate isolate-based.
 - [ ] Family
 - [ ] Error/Loading widget builder
-- [ ] Error Boundary Widget
-- [ ] Loading Boundary Widget
+- [ ] Error/Loading Boundary Widget
 - [ ] Observer - "Side-effect"
-- [ ] Testability
-  - [ ] Overridable
+- [ ] **Testability**
+  - [ ] Overridable state
   - [ ] State only test
   - [ ] Widget test
 - [ ] Reset state
 - [ ] Enhance DX
-  - [ ] hot reload
-  - [ ] State Inspector
-- [ ] File-based routing
+  - [ ] **Without source-gen for better DX**
+  - [ ] **Static State Inspector**
+  - [ ] **Live State Inspector**
+  - [ ] VScode extension
+- [ ] **File-based routing**
 
 # Contributions
 
