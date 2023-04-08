@@ -2,3 +2,5 @@
 ios/
 build/
 coverage/
+scripts/
+*.iml
