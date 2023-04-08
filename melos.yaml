@@ -25,7 +25,7 @@ scripts:
     description: Run pub get for all dart packages and examples
 
   publish:
-    run: melos publish -n -y --ignore="*fstate_generator*" && melos publish -n -y --scope="*fstate_generator*"
+    run: melos publish --no-dry-run -y --ignore="*fstate_generator*" && melos publish --no-dry-run -y --scope="*fstate_generator*"
 
 ide:
   intellij:
