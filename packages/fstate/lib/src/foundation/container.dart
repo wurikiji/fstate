@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:fstate/fstate.dart';
 
+/// A simple hash map to store fstate streams.
 class FstateStreamContainer {
   FstateStreamContainer();
 

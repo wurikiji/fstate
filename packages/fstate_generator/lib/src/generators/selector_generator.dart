@@ -73,14 +73,6 @@ class SelectorGenerator extends Generator {
         final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
         String type =
             e.type.getDisplayString(withNullability: true).replaceAll('*', '');
-        final derivedFrom = finjectAnnotationChecker
-            .firstAnnotationOf(e)
-            ?.getField('derivedFrom')
-            ?.toFunctionValue();
-
-        if (autoinjection && derivedFrom != null) {
-          type = derivedFrom.name.pascalCase;
-        }
         return e.isPositional
             ? ParameterWithMetadata.positional(
                 name: e.name,
