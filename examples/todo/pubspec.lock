@@ -222,17 +222,17 @@ packages:
   fstate:
     dependency: "direct main"
     description:
-      path: "../.."
+      path: "../../packages/fstate"
       relative: true
     source: path
-    version: "0.2.1"
+    version: "0.3.0"
   fstate_generator:
     dependency: "direct dev"
     description:
-      path: "../../../fstate_generator"
+      path: "../../packages/fstate_generator"
       relative: true
     source: path
-    version: "0.2.1"
+    version: "0.2.2"
   glob:
     dependency: transitive
     description:
@@ -386,7 +386,7 @@ packages:
     source: hosted
     version: "4.1.0"
   rxdart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: rxdart
       sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"

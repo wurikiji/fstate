@@ -51,7 +51,7 @@ class CounterWidget extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => counter.randomize(),
+        onPressed: () => counter.increment(),
         child: const Icon(Icons.add),
       ),
     );
