@@ -9,14 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fstate: ^0.4.0
+  fstate: ^0.5.0
   rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  fstate_generator: ^0.3.0
+  fstate_generator: ^0.4.0
   build_runner: ^2.3.3
 
 flutter:

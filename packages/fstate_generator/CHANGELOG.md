@@ -1,3 +1,9 @@
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: derivedFrom -> from.
+
 ## 0.3.0
 
 > Note: This release has breaking changes.

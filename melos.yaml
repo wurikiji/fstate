@@ -9,6 +9,23 @@ packages:
 command:
   bootstrap:
     usePubspecOverrides: true
+    runPubGetInParallel: true
+
+scripts:
+  refresh:
+    run: melos run refresh:flutter && melos run refresh:dart
+    description: Run pub get for all packages and examples
+
+  refresh:flutter:
+    run: melos exec --flutter -- flutter pub get
+    description: Run pub get for all flutter packages and examples
+
+  refresh:dart:
+    run: melos exec --no-flutter -- dart pub get
+    description: Run pub get for all dart packages and examples
+
+  publish:
+    run: melos publish --no-dry-run -y --ignore="*fstate_generator*" && melos publish --no-dry-run -y --scope="*fstate_generator*"
 
 ide:
   intellij:

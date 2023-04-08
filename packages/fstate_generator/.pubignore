@@ -1,1 +1,6 @@
 *.g.dart
+ios/
+build/
+coverage/
+scripts/
+*.iml
