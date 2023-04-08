@@ -48,7 +48,7 @@ class WidgetGenerator extends Generator {
                 .replaceAll('*', '');
             final derivedFrom = finjectAnnotationChecker
                 .firstAnnotationOf(e)
-                ?.getField('derivedFrom')
+                ?.getField('from')
                 ?.toFunctionValue();
 
             if (autoinjection && derivedFrom != null) {

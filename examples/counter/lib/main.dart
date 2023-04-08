@@ -76,7 +76,7 @@ Future<int> countSelector(
 class ThrottledCounterWidget extends StatelessWidget {
   @Fconstructor()
   const ThrottledCounterWidget({
-    @Finject(derivedFrom: countSelector) required this.count,
+    @Finject(from: countSelector) required this.count,
     super.key,
   });
   final int count;
