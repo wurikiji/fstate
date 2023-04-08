@@ -12,12 +12,16 @@ command:
     runPubGetInParallel: true
 
 scripts:
-  pub-get-flutter:
-    run: melos bs && melos exec --flutter -- flutter pub get
+  refresh:
+    run: melos run refresh:flutter && melos run refresh:dart
+    description: Run pub get for all packages and examples
+
+  refresh:flutter:
+    run: melos exec --flutter -- flutter pub get
     description: Run pub get for all flutter packages and examples
 
-  pub-get-dart:
-    run: melos bs && melos exec --no-flutter -- dart pub get
+  refresh:dart:
+    run: melos exec --no-flutter -- dart pub get
     description: Run pub get for all dart packages and examples
 
   publish:
