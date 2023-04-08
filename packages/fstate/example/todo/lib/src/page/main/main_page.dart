@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo/src/page/main/widget/todo_input_field.dart';
 
+import 'widget/todo_input_field.dart';
 import 'widget/todo_list_view.dart';
 
 class MainPage extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fstate/fstate.dart';
-import 'package:todo/src/logic/todo_store.dart';
+
+import '../../../logic/todo_store.dart';
 
 part 'todo_list_view.g.dart';
 
