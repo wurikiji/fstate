@@ -7,10 +7,8 @@ import 'package:rxdart/rxdart.dart';
 
 @Fstate()
 class Counter {
-  @Fconstructor()
   Counter([this.value = 0]);
 
-  @Faction()
   int value;
 
   @Faction()
@@ -32,15 +30,15 @@ class Counter {
   }
 }
 
-@Fselector()
+@fstate
 int countSelector(
-  @Finject() Counter counter,
+  @Finject($Counter.new, true) Counter counter,
 ) =>
     counter.value;
 
-@Fselector()
+@fstate
 void Function() increaseSelector(
-  @Finject() Counter counter,
+  @Finject($Counter.new, true) Counter counter,
 ) {
   return counter.increment;
 }
@@ -49,17 +47,16 @@ Stream debounceOneSecond(Stream source) {
   return source.debounceTime(const Duration(milliseconds: 1000));
 }
 
-@Fselector()
+@fstate
 int debouncedCount(
-  @Finject(alternator: debounceOneSecond) Counter counter,
+  @Ftransform(debounceOneSecond) @Finject($Counter.new, true) Counter counter,
 ) =>
     counter.value;
 
 @Fwidget()
 class InjectedCounterWidget extends StatelessWidget {
-  @Fconstructor()
   const InjectedCounterWidget({
-    @Finject() required this.counter,
+    @Finject($Counter.new, true) required this.counter,
     super.key,
   });
   final Counter counter;
@@ -81,9 +78,8 @@ class InjectedCounterWidget extends StatelessWidget {
 
 @Fwidget()
 class CounterWidget extends StatelessWidget {
-  @Fconstructor()
   const CounterWidget({
-    @Finject(from: countSelector) required this.count,
+    @Finject(countSelector, true) required this.count,
     super.key,
   });
 
@@ -99,9 +95,8 @@ class CounterWidget extends StatelessWidget {
 class CounterIncreaser extends StatelessWidget {
   final void Function() increaseCounter;
 
-  @Fconstructor()
   const CounterIncreaser({
-    @Finject(from: increaseSelector) required this.increaseCounter,
+    @Finject(increaseSelector, true) required this.increaseCounter,
     super.key,
   });
 
@@ -116,9 +111,8 @@ class CounterIncreaser extends StatelessWidget {
 
 @Fwidget()
 class DebouncedCounterWidget extends StatelessWidget {
-  @Fconstructor()
   const DebouncedCounterWidget({
-    @Finject(from: debouncedCount) required this.count,
+    @Finject(debouncedCount, true) required this.count,
     super.key,
   });
 
@@ -160,6 +154,7 @@ void main() {
       ));
       await tester.pumpWidget(widget);
       await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(milliseconds: 1200));
 
       final text = find.text('0');
       expect(text, findsOneWidget);
@@ -205,16 +200,16 @@ void main() {
 
 class _Counter implements Counter {
   _Counter({
-    required this.setNextState,
+    required this.$setNextState,
     int value = 0,
   }) : _counter = Counter(value);
 
   _Counter.from({
-    required this.setNextState,
+    required this.$setNextState,
     required Counter counter,
   }) : _counter = counter;
 
-  final void Function(Counter) setNextState;
+  final void Function(Counter) $setNextState;
   final Counter _counter;
 
   @override
@@ -223,20 +218,20 @@ class _Counter implements Counter {
   @override
   set value(newValue) {
     _counter.value = newValue;
-    setNextState(_Counter.from(setNextState: setNextState, counter: _counter));
   }
 
   @override
   void increment() {
     _counter.increment();
-    setNextState(_Counter.from(setNextState: setNextState, counter: _counter));
+    $setNextState(
+        _Counter.from($setNextState: $setNextState, counter: _counter));
   }
 
   @override
   Counter decrement() {
     final result = _counter.decrement();
-    setNextState(
-      _Counter.from(setNextState: setNextState, counter: result),
+    $setNextState(
+      _Counter.from($setNextState: $setNextState, counter: result),
     );
     return result;
   }
@@ -244,8 +239,8 @@ class _Counter implements Counter {
   @override
   int multiply(int multiplier) {
     final result = _counter.multiply(multiplier);
-    setNextState(
-      _Counter.from(setNextState: setNextState, counter: _counter),
+    $setNextState(
+      _Counter.from($setNextState: $setNextState, counter: _counter),
     );
     return result;
   }
@@ -254,27 +249,27 @@ class _Counter implements Counter {
 class $Counter extends FstateFactory {
   $Counter({
     this.value = 0,
-  }) : stateKey = _CounterKey(
+  }) : $stateKey = _CounterKey(
           value: value,
         );
   final int value;
 
   @override
-  final FstateKey stateKey;
+  final FstateKey $stateKey;
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#value, value),
       ];
 
   @override
-  Function get stateBuilder => _Counter.new;
+  Function get $stateBuilder => _Counter.new;
 }
 
 class _CounterKey extends FstateKey {
   _CounterKey({
     int value = 0,
-  }) : super(Counter, [Counter.new, value]);
+  }) : super('Counter', [Counter.new, value]);
 }
 
 /// State builder
@@ -282,114 +277,114 @@ class $InjectedCounterWidget extends FstateWidget {
   const $InjectedCounterWidget({super.key});
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#counter, $Counter()),
       ];
 
   @override
-  Function get widgetBuilder => InjectedCounterWidget.new;
+  Function get $widgetBuilder => InjectedCounterWidget.new;
 }
 
 class $CounterWidget extends FstateWidget {
   const $CounterWidget({super.key});
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#count, $CountSelector()),
       ];
 
   @override
-  Function get widgetBuilder => CounterWidget.new;
+  Function get $widgetBuilder => CounterWidget.new;
 }
 
 class $CounterIncreaser extends FstateWidget {
   const $CounterIncreaser({super.key});
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#increaseCounter, $IncreaseSelector()),
       ];
 
   @override
-  Function get widgetBuilder => CounterIncreaser.new;
+  Function get $widgetBuilder => CounterIncreaser.new;
 }
 
 _countSelector({
   required Counter counter,
-  setNextState,
+  $setNextState,
 }) =>
     countSelector(counter);
 
 class $CountSelector extends FstateFactory {
-  $CountSelector() : stateKey = _CountSelectorKey();
+  $CountSelector() : $stateKey = _CountSelectorKey();
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#counter, $Counter()),
       ];
 
   @override
-  Function get stateBuilder => _countSelector;
+  Function get $stateBuilder => _countSelector;
 
   @override
-  final FstateKey stateKey;
+  final FstateKey $stateKey;
 }
 
 class _CountSelectorKey extends FstateKey {
-  _CountSelectorKey() : super(int, [countSelector]);
+  _CountSelectorKey() : super('int', [countSelector]);
 }
 
 class $IncreaseSelector extends FstateFactory {
-  $IncreaseSelector() : stateKey = _IncreaseSelectorKey();
+  $IncreaseSelector() : $stateKey = _IncreaseSelectorKey();
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#counter, $Counter()),
       ];
 
   @override
-  Function get stateBuilder => ({
+  Function get $stateBuilder => ({
         required Counter counter,
-        setNextState,
+        $setNextState,
       }) {
         return increaseSelector(counter);
       };
 
   @override
-  final FstateKey stateKey;
+  final FstateKey $stateKey;
 }
 
 class _IncreaseSelectorKey extends FstateKey {
-  _IncreaseSelectorKey() : super(Function, [increaseSelector]);
+  _IncreaseSelectorKey() : super('Function', [increaseSelector]);
 }
 
 class $DebouncedCount extends FstateFactory {
-  $DebouncedCount() : stateKey = _DebouncedCountKey();
+  $DebouncedCount() : $stateKey = _DebouncedCountKey();
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#counter, $Counter()),
       ];
 
   @override
-  Function get stateBuilder => ({
+  Function get $stateBuilder => ({
         required Counter counter,
-        setNextState,
+        $setNextState,
       }) {
         return debouncedCount(counter);
       };
 
   @override
-  final FstateKey stateKey;
+  final FstateKey $stateKey;
 
   @override
-  Map<dynamic, Alternator> get alternators => {
+  Map<dynamic, FTransformer> get $transformers => {
         #counter: debounceOneSecond,
       };
 }
 
 class _DebouncedCountKey extends FstateKey {
-  _DebouncedCountKey() : super(int, [debouncedCount]);
+  _DebouncedCountKey() : super('int', [debouncedCount]);
 }
 
 class $DebouncedCounterWidget extends FstateWidget {
@@ -397,10 +392,10 @@ class $DebouncedCounterWidget extends FstateWidget {
     super.key,
   });
   @override
-  Function get widgetBuilder => DebouncedCounterWidget.new;
+  Function get $widgetBuilder => DebouncedCounterWidget.new;
 
   @override
-  List<Param> get params => [
+  List<Param> get $params => [
         Param.named(#count, $DebouncedCount()),
       ];
 }

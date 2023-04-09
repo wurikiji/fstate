@@ -226,6 +226,13 @@ packages:
       relative: true
     source: path
     version: "0.5.0"
+  fstate_annotation:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/fstate_annotation"
+      relative: true
+    source: path
+    version: "0.1.0"
   fstate_generator:
     dependency: "direct dev"
     description:

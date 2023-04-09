@@ -5,11 +5,11 @@ import 'package:rxdart/rxdart.dart';
 abstract class FstateWidget extends StatefulWidget {
   const FstateWidget({super.key});
 
-  List<Param> get params => [];
+  List<Param> get $params => [];
 
-  Map<dynamic, Alternator> get alternators => {};
+  Map<dynamic, FTransformer> get $transformers => {};
 
-  Function get widgetBuilder;
+  Function get $widgetBuilder;
 
   @override
   State<FstateWidget> createState() => _FstateWidgetState();
@@ -20,8 +20,8 @@ class _FstateWidgetState extends State<FstateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final manualInputs = widget.params.where((e) => e.value is! FstateFactory);
-    final deps = widget.params.where((e) => e.value is FstateFactory);
+    final manualInputs = widget.$params.where((e) => e.value is! FstateFactory);
+    final deps = widget.$params.where((e) => e.value is FstateFactory);
     if (deps.isEmpty) {
       return _constructWidget(manualInputs);
     }
@@ -39,12 +39,12 @@ class _FstateWidgetState extends State<FstateWidget> {
     );
 
     final refreshStream = CombineLatestStream.list(builtDeps.map((e) {
-      final alternator = widget.alternators[e.key];
-      return applyAlternator(e.value, alternator);
+      final transformer = widget.$transformers[e.key];
+      return applyTransformer(e.value, transformer);
     }));
 
     return StreamBuilder(
-      stream: refreshStream,
+      stream: refreshStream.distinctUnique(),
       builder: (context, deps) {
         if (!deps.hasData) {
           return const SizedBox.shrink();
@@ -60,7 +60,7 @@ class _FstateWidgetState extends State<FstateWidget> {
   Widget _constructWidget(Iterable<Param> params) {
     final positionalParams = convertToPositionalParams(params).toList();
     final namedParams = convertToNamedParams(params);
-    return Function.apply(widget.widgetBuilder, positionalParams, namedParams)
+    return Function.apply(widget.$widgetBuilder, positionalParams, namedParams)
         as Widget;
   }
 }
@@ -78,9 +78,9 @@ class FstateConsumer<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final container = FstateScope.containerOf(context);
-    final stream = container.get(fstate.stateKey) ??
+    final stream = container.get(fstate.$stateKey) ??
         container.put(
-          fstate.stateKey,
+          fstate.$stateKey,
           fstate.createStateStream(container),
         );
 

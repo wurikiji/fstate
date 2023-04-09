@@ -2,82 +2,77 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:fstate_generator/src/helpers/parameter.dart';
-import 'package:fstate_generator/src/type_checkers/annotations.dart';
-import 'package:recase/recase.dart';
 import 'package:source_gen/source_gen.dart';
 
-import '../helpers/alternator.dart';
-import '../helpers/widget_generator.dart';
+import '../collector/data.dart';
+import '../collector/helpers/constructor.dart';
+import '../collector/helpers/param.dart';
+import '../type_checkers/annotations.dart';
+import '../utils/string.dart';
+import 'state_generator.dart';
 
 class WidgetGenerator extends Generator {
   @override
   FutureOr<String?> generate(LibraryReader library, BuildStep buildStep) {
     final fwidgets = library.annotatedWith(fwidgetAnnotationChecker);
-    final factoryGenerators =
-        fwidgets.map((e) => e.element as ClassElement).map(
-      (e) {
-        final constructor = e.constructors.firstWhere((element) =>
-            fconstructorAnnotationChecker.hasAnnotationOf(element));
+    return fwidgets
+        .where((element) => element.element is ClassElement)
+        .map((e) => e.element as ClassElement)
+        .map((e) {
+      final constructor =
+          parseConstructor(e.constructors.fstateDefaultConstructor);
+      final name = e.name;
+      final params =
+          constructor.params.where((element) => element.name != 'key').toList();
 
-        final injections = constructor.parameters.where(
-          (element) => finjectAnnotationChecker.hasAnnotationOf(element),
-        );
+      var factoryParams = params.toFactoryParams(true);
+      if (factoryParams.endsWith('}')) {
+        factoryParams =
+            '${factoryParams.substring(0, factoryParams.length - 1)}, Key? key}';
+      }
+      final fields = params.toFactoryFields();
 
-        final alternators = injections
-            .where((e) => finjectAnnotationChecker.hasAnnotationOf(e))
-            .where((e) =>
-                finjectAnnotationChecker
-                    .firstAnnotationOf(e)!
-                    .getField('alternator')
-                    ?.toFunctionValue() !=
-                null)
-            .map((e) {
-          final target = e.name;
-          final annotation = finjectAnnotationChecker.annotationsOf(e).first;
-          final alternatorName =
-              annotation.getField('alternator')!.toFunctionValue()!.name;
-          return AlternatorArg(target: target, alternatorName: alternatorName);
-        });
-        return FstateWidgetGenerator(
-          baseName: e.displayName,
-          params: constructor.parameters.map((e) {
-            final autoinjection = finjectAnnotationChecker.hasAnnotationOf(e);
-            String type = e.type
-                .getDisplayString(withNullability: true)
-                .replaceAll('*', '');
-            final derivedFrom = finjectAnnotationChecker
-                .firstAnnotationOf(e)
-                ?.getField('from')
-                ?.toFunctionValue();
+      return '''
+class ${name.toWidgetName()} extends FstateWidget {
+  const ${name.toWidgetName()}($factoryParams) : super(key: key);
 
-            if (autoinjection && derivedFrom != null) {
-              type = derivedFrom.name.pascalCase;
-            }
+  $fields
 
-            return e.isPositional
-                ? ParameterWithMetadata.positional(
-                    name: e.name,
-                    type: type,
-                    position: constructor.parameters.indexOf(e),
-                    defaultValue: e.defaultValueCode,
-                    autoInject: autoinjection,
-                  )
-                : ParameterWithMetadata.named(
-                    type: type,
-                    name: e.name,
-                    defaultValue: e.defaultValueCode,
-                    autoInject: autoinjection,
-                  );
-          }).toList(),
-          widgetBuilder: constructor.displayName.contains('.')
-              ? constructor.displayName
-              : '${constructor.displayName}.new',
-          alternators: alternators.toList(),
-        );
-      },
-    );
-    final outputs = factoryGenerators.map((e) => e.toString()).join('\n');
-    return outputs;
+  @override
+  List<Param> get \$params => [
+    ${constructor.params.toFwidgetParamList()}
+  ];
+
+  @override
+  Map<dynamic, FTransformer> get \$transformers => { };
+
+  @override
+  Function get \$widgetBuilder => $name.${constructor.name};
+}
+''';
+    }).join('');
+  }
+}
+
+extension ToWidgetName on String {
+  String toWidgetName() {
+    return '\$$this';
+  }
+}
+
+extension ToFstateParamList on List<ParameterMetadata> {
+  String toFwidgetParamList() {
+    return map((e) {
+      final name = e.name;
+      final place = e.isPositional ? 'positional' : 'named';
+      final position = e.isPositional ? e.position : '#${e.name}';
+      if (e.injectedFrom == null) {
+        return 'Param.$place($position, $name)';
+      }
+      final value = '''
+$name ${e.needManualInject ? '' : '?? ${e.injectedFrom!.toFactoryName()}()'}
+''';
+      return 'Param.$place($position, $value)';
+    }).join(', ');
   }
 }

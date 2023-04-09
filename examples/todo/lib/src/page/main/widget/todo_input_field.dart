@@ -5,18 +5,17 @@ import '../../../logic/todo_store.dart';
 
 part 'todo_input_field.g.dart';
 
-@Fselector()
+@fstate
 addTodoSelector(
-  @Finject() TodoStore store,
+  @inject$TodoStore TodoStore store,
 ) {
   return store.add;
 }
 
-@Fwidget()
+@fwidget
 class TodoInputField extends StatelessWidget {
-  @Fconstructor()
   const TodoInputField({
-    @Finject(from: addTodoSelector) required this.addTodo,
+    @inject$addTodoSelector required this.addTodo,
     super.key,
   });
 

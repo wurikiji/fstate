@@ -1,7 +1,7 @@
 targets:
   $default:
     builders:
-      fstate_generator:core_generator:
+      fstate_generator:state_generator:
         enabled: true
       source_gen:combining_builder:
         options:
@@ -9,10 +9,10 @@ targets:
             - unused_local_variable
 
 builders:
-  core_generator:
+  state_generator:
     import: "package:fstate_generator/builders.dart"
     builder_factories:
-      - "coreBuilder"
+      - "stateGenerator"
     build_extensions: { ".dart": [".fstate.g.part"] }
     auto_apply: dependents
     build_to: cache
