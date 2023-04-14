@@ -11,6 +11,8 @@ abstract class FstateWidget extends StatefulWidget {
 
   Function get $widgetBuilder;
 
+  Widget Function(BuildContext)? get $onLoading;
+
   @override
   State<FstateWidget> createState() => _FstateWidgetState();
 }
@@ -47,7 +49,7 @@ class _FstateWidgetState extends State<FstateWidget> {
       stream: refreshStream.distinctUnique(),
       builder: (context, deps) {
         if (!deps.hasData) {
-          return const SizedBox.shrink();
+          return widget.$onLoading?.call(context) ?? const SizedBox.shrink();
         }
         return _constructWidget([
           ...manualInputs,

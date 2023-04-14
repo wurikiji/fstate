@@ -27,8 +27,18 @@ class WidgetGenerator extends Generator {
 
       var factoryParams = params.toFactoryParams(true);
       if (factoryParams.endsWith('}')) {
-        factoryParams =
-            '${factoryParams.substring(0, factoryParams.length - 1)}, Key? key}';
+        factoryParams = '''
+${factoryParams.substring(0, factoryParams.length - 1)}, 
+this.\$onLoading,Key? key}
+''';
+      } else {
+        factoryParams = [
+          factoryParams,
+          '''
+{
+this.\$onLoading,Key? key
+}'''
+        ].where((s) => s.isNotEmpty).join(',');
       }
       final fields = params.toFactoryFields();
 
@@ -48,6 +58,9 @@ class ${name.toWidgetName()} extends FstateWidget {
 
   @override
   Function get \$widgetBuilder => $name.${constructor.name};
+
+  @override
+  final Widget Function(BuildContext)? \$onLoading;
 }
 ''';
     }).join('');
