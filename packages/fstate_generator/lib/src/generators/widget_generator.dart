@@ -61,6 +61,9 @@ class ${name.toWidgetName()} extends FstateWidget {
 
   @override
   final Widget Function(BuildContext)? \$onLoading;
+
+  @override
+  final Widget Function(BuildContext, Object? error)? \$onError;
 }
 ''';
     }).join('');
