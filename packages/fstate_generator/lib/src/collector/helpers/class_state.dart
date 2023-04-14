@@ -59,6 +59,7 @@ List<MethodMetadata> collectActionMethods(ClassElement element) {
 
 List<FieldMetadata> collectFields(ClassElement element) {
   return element.fields
+      .where((element) => !element.isPrivate)
       .map(
         (e) => FieldMetadata(
           name: e.name,

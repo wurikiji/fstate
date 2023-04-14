@@ -67,7 +67,7 @@ class SelectorFactory {
 $returnType ${name.toExtendedStateName()}($namedParam) ${returnsFuture ? 'async' : ''} {
   final result = $name($args);
   try {
-    return (${returnsFuture ? 'await' : ''} result).toFstate().\$buildState(\$setNextState);
+    return ((${returnsFuture ? 'await' : ''} result) as dynamic).toFstate().\$buildState(\$setNextState);
   } catch (_) {
     return result;
   }

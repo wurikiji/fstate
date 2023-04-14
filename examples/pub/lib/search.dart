@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:fstate/fstate.dart';
 
 import 'detail.dart';
 import 'pub_repository.dart';
@@ -14,48 +13,58 @@ part 'search.g.dart';
 const packagesPackageSize = 100;
 const searchPageSize = 10;
 
-@riverpod
-Future<List<Package>> fetchPackages(
-  FetchPackagesRef ref, {
+@fstate
+Future<List<SearchPackage>?> searchPackages({
+  @inject$PubRepository required PubRepository pubRepository,
   required int page,
   String search = '',
 }) async {
+  if (search.isEmpty) return null;
+  final token = cancelToken();
+  return await pubRepository.searchPackages(
+    page: page,
+    search: search,
+    cancelToken: token,
+  );
+}
+
+@fstate
+Future<List<Package>> fetchPackages({
+  @inject$searchPackages$ required List<SearchPackage>? searchedPackages,
+  @inject$PubRepository required PubRepository pubRepository,
+  required int page,
+}) async {
   assert(page > 0, 'page offset starts at 1');
-  final cancelToken = ref.cancelToken();
+  final token = cancelToken();
 
-  if (search.isEmpty) {
-    return ref
-        .watch(pubRepositoryProvider)
-        .getPackages(page: page, cancelToken: cancelToken);
+  if (searchedPackages == null) {
+    return pubRepository.getPackages(page: page, cancelToken: token);
   }
 
-  // Debouncing searches by delaying the request.
-  // If the search was cancelled during this delay, the network request will
-  // not be performed.
   await Future<void>.delayed(const Duration(milliseconds: 250));
-  if (cancelToken.isCancelled) {
-    throw Exception('cancelled');
-  }
-
-  final searchedPackages = await ref
-      .watch(pubRepositoryProvider)
-      .searchPackages(page: page, search: search, cancelToken: cancelToken);
 
   return Future.wait([
     for (final package in searchedPackages)
-      ref.watch(
-        FetchPackageDetailsProvider(packageName: package.package).future,
-      ),
+      fetchPackageDetails(
+        packageName: package.package,
+        pubRepository: pubRepository,
+      )
   ]);
 }
 
+@fwidget
 class SearchPage extends HookWidget {
-  const SearchPage({super.key});
+  const SearchPage({
+    super.key,
+    @inject$PubRepository required this.pubRepository,
+  });
+  final PubRepository pubRepository;
 
   @override
   Widget build(BuildContext context) {
     final searchController = useTextEditingController();
     useListenable(searchController);
+    print("Build search page");
 
     return Scaffold(
       appBar: const PubAppbar(),
@@ -64,14 +73,8 @@ class SearchPage extends HookWidget {
           SearchBar(controller: searchController),
           Expanded(
             child: RefreshIndicator(
-              onRefresh: () {
-                // disposes the pages previously fetched. Next read will refresh them
-                ref.invalidate(fetchPackagesProvider);
-                // keep showing the progress indicator until the first page is fetched
-                return ref.read(
-                  fetchPackagesProvider(page: 1, search: searchController.text)
-                      .future,
-                );
+              onRefresh: () async {
+                pubRepository.refresh();
               },
               child: ListView.custom(
                 padding: const EdgeInsets.only(top: 30),
@@ -82,43 +85,67 @@ class SearchPage extends HookWidget {
 
                   final page = index ~/ pageSize + 1;
                   final indexInPage = index % pageSize;
-                  final packageList = ref.watch(
-                    fetchPackagesProvider(
-                      page: page,
-                      search: searchController.text,
-                    ),
-                  );
-
-                  return packageList.when(
-                    error: (err, stack) => Text('Error $err'),
-                    loading: () => const PackageItemShimmer(),
-                    data: (packages) {
-                      if (indexInPage >= packages.length) return null;
-
-                      final package = packages[indexInPage];
-
-                      return PackageItem(
-                        name: package.name,
-                        description: package.latest.pubspec.description,
-                        version: package.latest.version,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                            builder: (context) {
-                              return PackageDetailPage(
-                                packageName: package.name,
-                              );
-                            },
-                          ),
+                  try {
+                    return $_PackageItemBuilder(
+                      packages: $fetchPackages(
+                        page: page,
+                        searchedPackages: $searchPackages(
+                          page: page,
+                          search: searchController.text,
                         ),
-                      );
-                    },
-                  );
+                      ),
+                      indexInPage: indexInPage,
+                      $onLoading: (context) {
+                        return PackageItemShimmer();
+                      },
+                    );
+                  } catch (_) {
+                    return null;
+                  }
                 }),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+@fwidget
+class _PackageItemBuilder extends StatelessWidget {
+  _PackageItemBuilder({
+    @inject$fetchPackages$ required this.packages,
+    required this.indexInPage,
+  }) : assert(indexInPage < packages.length) {
+    if (indexInPage >= packages.length) {
+      throw 'indexInPage $indexInPage is out of bounds';
+    }
+  }
+
+  final List<Package> packages;
+  final int indexInPage;
+
+  @override
+  Widget build(BuildContext context) {
+    print('build item $indexInPage, ${packages.length}');
+    final package = packages[indexInPage];
+
+    return PackageItem(
+      name: package.name,
+      description: package.latest.pubspec.description,
+      version: package.latest.version,
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) {
+            return $PackageDetailPage(
+              packageName: package.name,
+              metrics: $packageMetrics(packageName: package.name),
+              package: $fetchPackageDetails(packageName: package.name),
+            );
+          },
+        ),
       ),
     );
   }

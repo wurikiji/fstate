@@ -1,15 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:fstate/fstate.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
 
 part 'pub_repository.freezed.dart';
 part 'pub_repository.g.dart';
 
+@fstate
 class PubRepository {
   static const _scheme = 'https';
   static const _host = 'pub.dartlang.org';
 
-  final dio = Dio();
+  Dio get dio => Dio();
+
+  @faction
+  void refresh() {}
 
   Future<List<Package>> getPackages({
     required int page,
@@ -109,6 +114,7 @@ class PubRepository {
     );
   }
 
+  @faction
   Future<void> like({
     required String packageName,
     CancelToken? cancelToken,
@@ -128,6 +134,7 @@ class PubRepository {
     );
   }
 
+  @faction
   Future<void> unlike({
     required String packageName,
     CancelToken? cancelToken,

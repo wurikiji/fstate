@@ -278,18 +278,23 @@ packages:
   fstate:
     dependency: "direct main"
     description:
-      name: fstate
-      sha256: d06df17f218652b9afc1cdaf834f9eb8d0987fbb12c4643deb02199179832a81
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/fstate"
+      relative: true
+    source: path
     version: "0.5.0"
+  fstate_annotation:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/fstate_annotation"
+      relative: true
+    source: path
+    version: "0.1.0"
   fstate_generator:
     dependency: "direct dev"
     description:
-      name: fstate_generator
-      sha256: a884d3a7ddd0205d208ee278fce41dc2c088f079dfdc2eacfd556e7171ab6b31
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/fstate_generator"
+      relative: true
+    source: path
     version: "0.4.0"
   glob:
     dependency: transitive
@@ -491,30 +496,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  riverpod:
-    dependency: transitive
-    description:
-      name: riverpod
-      sha256: "59a48de9c757aa61aa28e9fd625ffb360d43b6b54606f12536622c55be9e8c4b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
-  riverpod_annotation:
-    dependency: "direct main"
-    description:
-      name: riverpod_annotation
-      sha256: "4726dfa853880e64a8a9f7232eb10a69d6d1df5a45d5847fd0b9ecf6807e57b7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
-  riverpod_generator:
-    dependency: "direct dev"
-    description:
-      name: riverpod_generator
-      sha256: e87363e27dd8bce40a194c2ba6a7630ee343826d7a4500d70f7f729ea8e27d50
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   rxdart:
     dependency: "direct main"
     description:
@@ -616,14 +597,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
-  state_notifier:
-    dependency: transitive
-    description:
-      name: state_notifier
-      sha256: "8fe42610f179b843b12371e40db58c9444f8757f8b69d181c97e50787caed289"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.2+1"
   stream_channel:
     dependency: transitive
     description:
@@ -753,5 +726,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.2 <3.0.0"
+  dart: ">=2.19.0 <3.0.0"
   flutter: ">=3.0.0"
