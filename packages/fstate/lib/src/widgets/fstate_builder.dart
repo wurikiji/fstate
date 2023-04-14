@@ -13,6 +13,8 @@ abstract class FstateWidget extends StatefulWidget {
 
   Widget Function(BuildContext)? get $onLoading;
 
+  Widget Function(BuildContext, Object? error)? get $onError;
+
   @override
   State<FstateWidget> createState() => _FstateWidgetState();
 }
@@ -48,6 +50,10 @@ class _FstateWidgetState extends State<FstateWidget> {
     return StreamBuilder(
       stream: refreshStream.distinctUnique(),
       builder: (context, deps) {
+        if (deps.hasError) {
+          return widget.$onError?.call(context, deps.error) ??
+              const SizedBox.shrink();
+        }
         if (!deps.hasData) {
           return widget.$onLoading?.call(context) ?? const SizedBox.shrink();
         }
