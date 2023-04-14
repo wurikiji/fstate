@@ -29,14 +29,14 @@ class WidgetGenerator extends Generator {
       if (factoryParams.endsWith('}')) {
         factoryParams = '''
 ${factoryParams.substring(0, factoryParams.length - 1)}, 
-this.\$onLoading,Key? key}
+this.\$onLoading, this.\$onError, Key? key}
 ''';
       } else {
         factoryParams = [
           factoryParams,
           '''
 {
-this.\$onLoading,Key? key
+this.\$onLoading, this.\$onError, Key? key
 }'''
         ].where((s) => s.isNotEmpty).join(',');
       }
