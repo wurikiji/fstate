@@ -24,15 +24,22 @@ Future<Package> fetchPackageDetails({
   @inject$PubRepository required PubRepository pubRepository,
   required String packageName,
 }) async {
-  return pubRepository.getPackageDetails(
+  print("Get detail");
+  final result = await pubRepository.getPackageDetails(
       packageName: packageName, cancelToken: cancelToken());
+  print("Got detail");
+  return result;
 }
 
 @fstate
 Future<List<String>> likedPackages(
   @inject$PubRepository PubRepository pubRepository,
 ) async {
-  return pubRepository.getLikedPackages(cancelToken: cancelToken());
+  print("Get liked");
+  final result =
+      await pubRepository.getLikedPackages(cancelToken: cancelToken());
+  print("Got liked");
+  return result;
 }
 
 @fstate
@@ -40,7 +47,11 @@ Future<PackageMetricsScore> packageMetrics({
   @inject$PubRepository required PubRepository pubRepository,
   required String packageName,
 }) async {
-  return pubRepository.getPackageMetrics(packageName: packageName);
+  print("Get metrics");
+  final result =
+      await pubRepository.getPackageMetrics(packageName: packageName);
+  print("Got metrics");
+  return result;
 }
 
 /// The detail page of a package, typically reached by clicking on a package from [SearchPage].
@@ -50,7 +61,7 @@ class PackageDetailPage extends StatelessWidget {
     super.key,
     required this.packageName,
     @inject$fetchPackageDetails$ required this.package,
-    @inject$likedPackages required this.likedPackages,
+    // @inject$likedPackages required this.likedPackages,
     @inject$packageMetrics$ required this.metrics,
     @inject$PubRepository required this.pubRepository,
   });
@@ -58,26 +69,20 @@ class PackageDetailPage extends StatelessWidget {
   /// The name of the package that is inspected.
   final String packageName;
   final Package package;
-  final List<String> likedPackages;
+  // final List<String> likedPackages;
   final PackageMetricsScore metrics;
   final PubRepository pubRepository;
   @override
   Widget build(BuildContext context) {
-    final isLiked = likedPackages.contains(packageName);
+    // final isLiked = likedPackages.contains(packageName);
+    final isLiked = true;
+    // print("detail page build: $packageName, $isLiked");
 
     return Scaffold(
       appBar: const PubAppbar(),
       body: RefreshIndicator(
         onRefresh: () async {
-          /// ** not yet supported on fstate **
-          // return Future.wait([
-          //   ref.refresh(
-          //     packageMetricsProvider(packageName: packageName).future,
-          //   ),
-          //   ref.refresh(
-          //     fetchPackageDetailsProvider(packageName: packageName).future,
-          //   ),
-          // ]);
+          pubRepository.refresh();
         },
         child: PackageDetailBodyScrollView(
           packageName: packageName,

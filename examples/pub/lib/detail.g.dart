@@ -127,7 +127,6 @@ class $PackageDetailPage extends FstateWidget {
   const $PackageDetailPage(
       {required this.packageName,
       required this.package,
-      this.likedPackages,
       required this.metrics,
       this.pubRepository,
       this.$onLoading,
@@ -136,7 +135,6 @@ class $PackageDetailPage extends FstateWidget {
 
   final String packageName;
   final $fetchPackageDetails package;
-  final $likedPackages? likedPackages;
   final $packageMetrics metrics;
   final $PubRepository? pubRepository;
 
@@ -145,7 +143,6 @@ class $PackageDetailPage extends FstateWidget {
         Param.named(#key, key),
         Param.named(#packageName, packageName),
         Param.named(#package, package),
-        Param.named(#likedPackages, likedPackages ?? $likedPackages()),
         Param.named(#metrics, metrics),
         Param.named(#pubRepository, pubRepository ?? $PubRepository())
       ];

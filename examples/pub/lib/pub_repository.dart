@@ -172,7 +172,7 @@ class PubRepository {
   }
 }
 
-const userToken = '';
+const userToken = String.fromEnvironment('userToken');
 
 @freezed
 class PackageMetricsScore with _$PackageMetricsScore {

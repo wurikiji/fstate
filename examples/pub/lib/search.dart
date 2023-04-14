@@ -64,7 +64,6 @@ class SearchPage extends HookWidget {
   Widget build(BuildContext context) {
     final searchController = useTextEditingController();
     useListenable(searchController);
-    print("Build search page");
 
     return Scaffold(
       appBar: const PubAppbar(),
@@ -128,7 +127,6 @@ class _PackageItemBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build item $indexInPage, ${packages.length}');
     final package = packages[indexInPage];
 
     return PackageItem(
@@ -143,6 +141,13 @@ class _PackageItemBuilder extends StatelessWidget {
               packageName: package.name,
               metrics: $packageMetrics(packageName: package.name),
               package: $fetchPackageDetails(packageName: package.name),
+              $onLoading: (context) {
+                return const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
             );
           },
         ),
