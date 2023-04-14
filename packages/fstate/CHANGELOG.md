@@ -1,3 +1,10 @@
+## 0.6.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: bump up versions.
+ - **BREAKING** **FEAT**: family state.
+
 ## 0.5.0
 
 > Note: This release has breaking changes.
