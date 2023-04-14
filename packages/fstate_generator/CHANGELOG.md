@@ -1,3 +1,10 @@
+## 0.5.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: add on error builder param.
+ - **BREAKING** **FEAT**: family state.
+
 ## 0.4.0
 
 > Note: This release has breaking changes.
