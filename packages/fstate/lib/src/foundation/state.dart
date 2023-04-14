@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 /// A key to distinguish a fstate from a fstate container.
 class FstateKey {
   FstateKey(this._type, this._params);
-  final Type _type;
+  final String _type;
   final List _params;
 
   @override
@@ -20,14 +20,16 @@ class FstateKey {
   int get hashCode => Object.hashAllUnordered(_params);
 
   @override
-  String toString() => 'A key for $_type';
+  String toString() => 'A key for $_type with parameters: $_params';
 }
 
 /// Build fstate from a selector
 class DerivedFstateBuilder {
   const DerivedFstateBuilder(this.builder);
   final dynamic builder;
-  call(setNextState) => builder(setNextState);
+
+  /// Build a fstate
+  $buildFstate(setNextState) => builder(setNextState);
 }
 
 /// An abstract factory to create a key and a fstate
@@ -35,29 +37,29 @@ abstract class FstateFactory {
   const FstateFactory();
 
   /// FstateKey builder
-  FstateKey get stateKey;
+  FstateKey get $stateKey;
 
   /// Fstate builder
-  Function get stateBuilder;
+  Function get $stateBuilder;
 
   /// Parameters to build a fstate
-  List<Param> get params => [];
+  List<Param> get $params => [];
 
   /// Alternators to build a fstate
-  Map<dynamic, Alternator> get alternators => {};
+  Map<dynamic, FTransformer> get $transformers => {};
 
   /// A method to build a fstate
-  Stream createStateStream(FstateStreamContainer container) {
+  BehaviorSubject createStateStream(FstateStreamContainer container) {
     final subject = BehaviorSubject()
       ..addStream(
-        _createStateStream(container),
+        _createStateStream(container).distinctUnique(),
       );
     return subject;
   }
 
   Stream _createStateStream(FstateStreamContainer container) async* {
-    final manualInputs = params.where((e) => e.value is! FstateFactory);
-    final deps = params.where((e) => e.value is FstateFactory);
+    final manualInputs = $params.where((e) => e.value is! FstateFactory);
+    final deps = $params.where((e) => e.value is FstateFactory);
     final manualSubject = BehaviorSubject();
 
     if (deps.isEmpty) {
@@ -80,8 +82,8 @@ abstract class FstateFactory {
               },
             ))
         .map((e) {
-      final alternator = alternators[e.key];
-      return applyAlternator(e.value, alternator);
+      final transformer = $transformers[e.key];
+      return applyTransformer(e.value, transformer);
     });
 
     final refreshStream =
@@ -95,9 +97,7 @@ abstract class FstateFactory {
     });
 
     BehaviorSubject mergedSubject = BehaviorSubject()
-      ..addStream(
-        MergeStream([refreshStream, manualSubject]).asBroadcastStream(),
-      );
+      ..addStream(MergeStream([refreshStream, manualSubject]));
     yield* mergedSubject;
   }
 
@@ -107,18 +107,17 @@ abstract class FstateFactory {
     final namedParams = convertToNamedParams(params);
     namedParams[#$setNextState] = setNextState;
     final result =
-        await Function.apply(stateBuilder, positionalParams, namedParams);
+        await Function.apply($stateBuilder, positionalParams, namedParams);
     // if the selector returns a fstate builder
-
-    if (result is DerivedFstateBuilder) {
-      // then we need to build the fstate
-      return result(setNextState);
+    try {
+      return result.$buildFstate(setNextState);
+    } catch (e) {
+      return result;
     }
-    return result;
   }
 }
 
-/// A utility function to apply alternator to a stream
-Stream applyAlternator(Stream source, Alternator? alternator) {
-  return (alternator?.call(source) ?? source);
+/// A utility function to apply transformer to a stream
+Stream applyTransformer(Stream source, FTransformer? transformer) {
+  return (transformer?.call(source) ?? source);
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo/src/page/second_page/second_page.dart';
 
 import 'widget/todo_input_field.dart';
 import 'widget/todo_list_view.dart';
@@ -19,16 +18,6 @@ class MainPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) {
-              return const SecondPage();
-            }),
-          );
-        },
-        child: const Icon(Icons.navigate_next),
       ),
     );
   }

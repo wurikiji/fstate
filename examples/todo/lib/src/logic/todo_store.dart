@@ -4,9 +4,8 @@ import 'todo.dart';
 
 part 'todo_store.g.dart';
 
-@Fstate()
+@fstate
 class TodoStore {
-  @Fconstructor()
   TodoStore();
 
   final List<Todo> todos = [];

@@ -10,3 +10,4 @@ test/**/*.g.dart
 build/
 lib/main.dart
 ios/
+full_coverage_test.dart

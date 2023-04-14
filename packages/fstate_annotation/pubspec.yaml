@@ -1,0 +1,16 @@
+name: fstate_annotation
+description: A set of annotations for fstate.
+version: 0.1.0
+repository: https://github.com/wurikiji/fstate
+
+environment:
+  sdk: ">=2.19.6 <3.0.0"
+
+# dependencies:
+#   path: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+dependencies:
+  meta: ^1.8.0

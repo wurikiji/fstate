@@ -12,13 +12,20 @@
 # The core lints are also what is used by pub.dev for scoring packages.
 
 include: package:lints/recommended.yaml
-
+analyzer:
+  exclude:
+    - test/test_targest/**
 # Uncomment the following section to specify additional rules.
 
-# linter:
-#   rules:
-#     - camel_case_types
-
+linter:
+  rules:
+    - prefer_relative_imports
+    - require_trailing_commas
+    - always_declare_return_types
+    - always_put_required_named_parameters_first
+    - annotate_overrides
+    - prefer_asserts_with_message
+    - prefer_single_quotes
 # analyzer:
 #   exclude:
 #     - path/to/excluded/files/**

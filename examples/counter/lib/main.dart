@@ -21,11 +21,10 @@ class MainApp extends StatelessWidget {
   }
 }
 
-@Fwidget()
+@fwidget
 class CounterWidget extends StatelessWidget {
-  @Fconstructor()
   const CounterWidget({
-    @Finject() required this.counter,
+    @inject$Counter required this.counter,
     super.key,
   });
 
@@ -44,9 +43,6 @@ class CounterWidget extends StatelessWidget {
               style: const TextStyle(fontSize: 32),
             ),
             const Text("Times"),
-            const SizedBox(height: 32),
-            const Text("This is a throttled counter"),
-            const $ThrottledCounterWidget(),
           ],
         ),
       ),
@@ -60,32 +56,4 @@ class CounterWidget extends StatelessWidget {
 
 Stream throttleOnceASecond(Stream stream) {
   return stream.throttleTime(const Duration(seconds: 1));
-}
-
-@Fselector()
-Future<int> countSelector(
-  @Finject(
-    alternator: throttleOnceASecond,
-  )
-      Counter counter,
-) async {
-  return counter.count;
-}
-
-@Fwidget()
-class ThrottledCounterWidget extends StatelessWidget {
-  @Fconstructor()
-  const ThrottledCounterWidget({
-    @Finject(from: countSelector) required this.count,
-    super.key,
-  });
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      '$count',
-      style: const TextStyle(fontSize: 32),
-    );
-  }
 }

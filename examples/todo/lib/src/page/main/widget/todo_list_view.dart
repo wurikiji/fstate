@@ -6,9 +6,9 @@ import '../../../models/todo_param.dart';
 
 part 'todo_list_view.g.dart';
 
-@Fselector()
+@fstate
 todosFromStore(
-  @Finject() TodoStore store,
+  @inject$TodoStore TodoStore store,
 ) {
   return store.todos.map((todo) {
     return TodoParam(
@@ -19,11 +19,10 @@ todosFromStore(
   }).toList();
 }
 
-@Fwidget()
+@fwidget
 class TodoListView extends StatelessWidget {
-  @Fconstructor()
   const TodoListView({
-    @Finject(from: todosFromStore) this.todos = const [],
+    @inject$todosFromStore this.todos = const [],
     super.key,
   });
 
@@ -47,25 +46,24 @@ class TodoListView extends StatelessWidget {
   }
 }
 
-@Fselector()
+@fstate
 onToggleFromStore(
-  @Finject() TodoStore store,
+  @inject$TodoStore TodoStore store,
 ) =>
     store.toggle;
 
-@Fselector()
+@fstate
 onRemoveFromStore(
-  @Finject() TodoStore store,
+  @inject$TodoStore TodoStore store,
 ) =>
     store.remove;
 
-@Fwidget()
+@fwidget
 class TodoTile extends StatelessWidget {
-  @Fconstructor()
   const TodoTile({
     required this.todo,
-    @Finject(from: onToggleFromStore) required this.onToggle,
-    @Finject(from: onRemoveFromStore) required this.onRemove,
+    @inject$onToggleFromStore required this.onToggle,
+    @inject$onRemoveFromStore required this.onRemove,
     super.key,
   });
 

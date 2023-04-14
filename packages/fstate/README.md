@@ -43,10 +43,10 @@ but it's cumbersome to implement.
 - [x] Async selector
 - [x] Async action
 - [x] State from the selector
+- [x] Family
 - [ ] Widget life cycle
 - [ ] **Isolate-based**
   - Since v3.7, flutter supports background isolate platform channels. This is a good opportunity to make fstate isolate-based.
-- [ ] Family
 - [ ] Error/Loading widget builder
 - [ ] Error/Loading Boundary Widget
 - [ ] Observer - "Side-effect"
@@ -56,7 +56,7 @@ but it's cumbersome to implement.
   - [ ] Widget test
 - [ ] Reset state
 - [ ] Enhance DX
-  - [ ] **Without source-gen for better DX**
+  - [ ] **Multi step generation for better DX** - reduce the number of annotations
   - [ ] **Static State Inspector**
   - [ ] **Live State Inspector**
   - [ ] VScode extension
