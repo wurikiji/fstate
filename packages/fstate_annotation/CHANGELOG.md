@@ -1,3 +1,7 @@
+## 0.2.0+1
+
+ - **FIX**: downgrade dart dep of annotation package.
+
 ## 0.2.0
 
 > Note: This release has breaking changes.
