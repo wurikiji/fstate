@@ -10,14 +10,14 @@ dependencies:
   async: ^2.10.0
   flutter:
     sdk: flutter
-  fstate: ^0.6.0
+  fstate: ^0.6.0+1
   rxdart: ^0.27.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  fstate_generator: ^0.5.0
+  fstate_generator: ^0.5.0+1
   build_runner: ^2.3.3
 
 flutter:
