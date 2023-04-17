@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 /// A key to distinguish a fstate from a fstate container.
 class FstateKey {
+  /// TODO: What if _params contains closures?
   FstateKey(this._type, this._params);
   final String _type;
   final List _params;
@@ -34,7 +35,7 @@ class DerivedFstateBuilder {
 
 /// An abstract factory to create a key and a fstate
 abstract class FstateFactory {
-  const FstateFactory();
+  FstateFactory();
 
   /// FstateKey builder
   FstateKey get $stateKey;
@@ -48,6 +49,8 @@ abstract class FstateFactory {
   /// Alternators to build a fstate
   Map<dynamic, FTransformer> get $transformers => {};
 
+  bool _needUnregister = false;
+
   /// A method to build a fstate
   BehaviorSubject createStateStream(FstateStreamContainer container) {
     final subject = BehaviorSubject()
@@ -55,6 +58,26 @@ abstract class FstateFactory {
         _createStateStream(container).distinctUnique(),
       );
     return subject;
+  }
+
+  void unregister(FstateStreamContainer container) {
+    container.unregister($stateKey);
+    if (!container.contains($stateKey)) {
+      _unregisterDepdencies(container);
+    }
+  }
+
+  void _unregisterDepdencies(FstateStreamContainer container) {
+    if (!_needUnregister) {
+      return;
+    }
+    final deps = $params
+        .where((e) => e.value is FstateFactory)
+        .map((e) => e.value as FstateFactory);
+    for (final dep in deps) {
+      dep.unregister(container);
+    }
+    _needUnregister = false;
   }
 
   Stream _createStateStream(FstateStreamContainer container) async* {
@@ -85,6 +108,8 @@ abstract class FstateFactory {
       final transformer = $transformers[e.key];
       return applyTransformer(e.value, transformer);
     });
+    _unregisterDepdencies(container);
+    _needUnregister = true;
 
     final refreshStream =
         CombineLatestStream.list(builtDeps).asyncMap((e) async {
@@ -115,6 +140,19 @@ abstract class FstateFactory {
       return result;
     }
   }
+
+  @override
+  bool operator ==(Object? other) {
+    // Key is the source of truth
+    return identical(this, other) ||
+        (other is FstateFactory && $stateKey == other.$stateKey);
+  }
+
+  @override
+  int get hashCode => Object.hashAllUnordered([$stateKey]);
+
+  @override
+  String toString() => 'A factory for ${$stateKey}';
 }
 
 /// A utility function to apply transformer to a stream

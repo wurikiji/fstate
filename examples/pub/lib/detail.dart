@@ -24,10 +24,8 @@ Future<Package> fetchPackageDetails({
   @inject$PubRepository required PubRepository pubRepository,
   required String packageName,
 }) async {
-  print("Get detail");
   final result = await pubRepository.getPackageDetails(
       packageName: packageName, cancelToken: cancelToken());
-  print("Got detail");
   return result;
 }
 
@@ -35,10 +33,8 @@ Future<Package> fetchPackageDetails({
 Future<List<String>> likedPackages(
   @inject$PubRepository PubRepository pubRepository,
 ) async {
-  print("Get liked");
   final result =
       await pubRepository.getLikedPackages(cancelToken: cancelToken());
-  print("Got liked");
   return result;
 }
 
@@ -47,10 +43,8 @@ Future<PackageMetricsScore> packageMetrics({
   @inject$PubRepository required PubRepository pubRepository,
   required String packageName,
 }) async {
-  print("Get metrics");
   final result =
       await pubRepository.getPackageMetrics(packageName: packageName);
-  print("Got metrics");
   return result;
 }
 
@@ -59,7 +53,6 @@ Future<PackageMetricsScore> packageMetrics({
 class PackageDetailPage extends StatelessWidget {
   const PackageDetailPage({
     super.key,
-    required this.packageName,
     @inject$fetchPackageDetails$ required this.package,
     // @inject$likedPackages required this.likedPackages,
     @inject$packageMetrics$ required this.metrics,
@@ -67,7 +60,6 @@ class PackageDetailPage extends StatelessWidget {
   });
 
   /// The name of the package that is inspected.
-  final String packageName;
   final Package package;
   // final List<String> likedPackages;
   final PackageMetricsScore metrics;
@@ -85,7 +77,7 @@ class PackageDetailPage extends StatelessWidget {
           pubRepository.refresh();
         },
         child: PackageDetailBodyScrollView(
-          packageName: packageName,
+          packageName: package.name,
           packageVersion: package.latest.version,
           packageDescription: package.latest.pubspec.description,
           grantedPoints: metrics.grantedPoints,
@@ -97,9 +89,9 @@ class PackageDetailPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (isLiked) {
-            await pubRepository.unlike(packageName: packageName);
+            await pubRepository.unlike(packageName: package.name);
           } else {
-            await pubRepository.like(packageName: packageName);
+            await pubRepository.like(packageName: package.name);
           }
         },
         child: isLiked

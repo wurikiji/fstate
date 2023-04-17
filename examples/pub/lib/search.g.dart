@@ -54,13 +54,9 @@ const inject$fetchPackages$ = Finject(fetchPackages, false);
 
 Future<List<Package>> _$fetchPackages(
     {$setNextState,
-    List<SearchPackage>? searchedPackages,
     required PubRepository pubRepository,
     required int page}) async {
-  final result = fetchPackages(
-      searchedPackages: searchedPackages,
-      pubRepository: pubRepository,
-      page: page);
+  final result = fetchPackages(pubRepository: pubRepository, page: page);
   try {
     return ((await result) as dynamic).toFstate().$buildState($setNextState);
   } catch (_) {
@@ -69,12 +65,10 @@ Future<List<Package>> _$fetchPackages(
 }
 
 class $fetchPackages extends FstateFactory {
-  $fetchPackages(
-      {required this.searchedPackages, this.pubRepository, required this.page})
-      : $stateKey = FstateKey('Future<List<Package>>',
-            [fetchPackages, searchedPackages, pubRepository, page]);
+  $fetchPackages({this.pubRepository, required this.page})
+      : $stateKey = FstateKey(
+            'Future<List<Package>>', [fetchPackages, pubRepository, page]);
 
-  final $searchPackages searchedPackages;
   final $PubRepository? pubRepository;
   final int page;
 
@@ -86,7 +80,6 @@ class $fetchPackages extends FstateFactory {
 
   @override
   List<Param> get $params => [
-        Param.named(#searchedPackages, searchedPackages),
         Param.named(#pubRepository, pubRepository ?? $PubRepository()),
         Param.named(#page, page)
       ];
@@ -100,7 +93,8 @@ class $fetchPackages extends FstateFactory {
 // **************************************************************************
 
 class $SearchPage extends FstateWidget {
-  const $SearchPage({this.pubRepository, this.$onLoading, Key? key})
+  const $SearchPage(
+      {this.pubRepository, this.$onLoading, this.$onError, Key? key})
       : super(key: key);
 
   final $PubRepository? pubRepository;
@@ -119,13 +113,48 @@ class $SearchPage extends FstateWidget {
 
   @override
   final Widget Function(BuildContext)? $onLoading;
+
+  @override
+  final Widget Function(BuildContext, Object? error)? $onError;
 }
 
-class $_PackageItemBuilder extends FstateWidget {
-  const $_PackageItemBuilder(
+class $SearchList extends FstateWidget {
+  const $SearchList(
       {required this.packages,
       required this.indexInPage,
       this.$onLoading,
+      this.$onError,
+      Key? key})
+      : super(key: key);
+
+  final $searchPackages packages;
+  final int indexInPage;
+
+  @override
+  List<Param> get $params => [
+        Param.named(#packages, packages),
+        Param.named(#indexInPage, indexInPage)
+      ];
+
+  @override
+  Map<dynamic, FTransformer> get $transformers => {};
+
+  @override
+  Function get $widgetBuilder => SearchList.new;
+
+  @override
+  final Widget Function(BuildContext)? $onLoading;
+
+  @override
+  final Widget Function(BuildContext, Object? error)? $onError;
+}
+
+class $PackageList extends FstateWidget {
+  const $PackageList(
+      {required this.packages,
+      required this.indexInPage,
+      this.$onLoading,
+      this.$onError,
       Key? key})
       : super(key: key);
 
@@ -142,8 +171,11 @@ class $_PackageItemBuilder extends FstateWidget {
   Map<dynamic, FTransformer> get $transformers => {};
 
   @override
-  Function get $widgetBuilder => _PackageItemBuilder.new;
+  Function get $widgetBuilder => PackageList.new;
 
   @override
   final Widget Function(BuildContext)? $onLoading;
+
+  @override
+  final Widget Function(BuildContext, Object? error)? $onError;
 }

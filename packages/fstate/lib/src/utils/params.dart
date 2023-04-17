@@ -52,11 +52,12 @@ Param<Stream<Param>> calculateFstateFactoryParam(
   ParamConstructor paramConstructor,
 ) {
   final factory = param.value as FstateFactory;
-  final value = (container.get(factory.$stateKey) ??
-          container.put(
-            factory.$stateKey,
-            factory.createStateStream(container),
-          ))
+  final value = (container.contains(factory.$stateKey)
+          ? container.get(factory.$stateKey)!
+          : container.put(
+              factory.$stateKey,
+              factory.createStateStream(container),
+            ))
       .map((event) => paramConstructor(param.key, event));
   return paramConstructor(param.key, value);
 }
