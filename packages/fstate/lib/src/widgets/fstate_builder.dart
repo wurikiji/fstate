@@ -126,34 +126,3 @@ class _FstateWidgetState extends State<FstateWidget> {
         as Widget;
   }
 }
-
-class FstateConsumer<T> extends StatelessWidget {
-  const FstateConsumer({
-    required this.fstate,
-    required this.builder,
-    super.key,
-  });
-
-  final FstateFactory fstate;
-  final Widget Function(BuildContext context, T data) builder;
-
-  @override
-  Widget build(BuildContext context) {
-    final container = FstateScope.containerOf(context);
-    final stream = container.get(fstate.$stateKey) ??
-        container.put(
-          fstate.$stateKey,
-          fstate.createStateStream(container),
-        );
-
-    return StreamBuilder(
-      stream: stream,
-      builder: (context, data) {
-        if (!data.hasData) {
-          return const SizedBox.shrink();
-        }
-        return builder(context, data.data as T);
-      },
-    );
-  }
-}

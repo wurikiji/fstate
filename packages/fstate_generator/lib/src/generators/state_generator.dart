@@ -47,8 +47,14 @@ class StateFactory {
           actionMethods: collectActionMethods(e),
           normalMethods: collectNormalMethods(e),
           fields: collectFields(e),
-        );
+        ),
+        keepAlive = fstateAnnotationChecker
+                .firstAnnotationOf(e)
+                ?.getField('keepAlive')
+                ?.toBoolValue() ??
+            false;
   final FstateMetadata fstateMetadata;
+  late final bool keepAlive;
   ConstructorMetadata get constructor => fstateMetadata.constructors.first;
 
   String generateAnnotation() {
@@ -62,6 +68,7 @@ class StateFactory {
       '${fstateMetadata.name}.${constructor.name}',
       fstateMetadata.name,
       constructor.params,
+      keepAlive,
     );
   }
 

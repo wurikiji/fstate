@@ -10,7 +10,8 @@ const faction = Faction();
 /// Annotate class to extend it to reactive state.
 @Target({TargetKind.classType, TargetKind.function})
 class Fstate {
-  const Fstate();
+  const Fstate({this.keepAlive = false});
+  final bool keepAlive;
 }
 
 class Fconstructor {

@@ -49,6 +49,9 @@ abstract class FstateFactory {
   /// Alternators to build a fstate
   Map<dynamic, FTransformer> get $transformers => {};
 
+  /// Whether to keep the fstate alive
+  bool get $keepAlive => false;
+
   bool _needUnregister = false;
 
   /// A method to build a fstate
@@ -123,6 +126,7 @@ abstract class FstateFactory {
 
     BehaviorSubject mergedSubject = BehaviorSubject()
       ..addStream(MergeStream([refreshStream, manualSubject]));
+
     yield* mergedSubject;
   }
 

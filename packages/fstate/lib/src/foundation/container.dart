@@ -9,9 +9,14 @@ class FstateStreamContainer {
 
   final HashMap<FstateKey, BehaviorSubject<dynamic>> _store = HashMap();
   final HashMap<FstateKey, int> _referenceCounter = HashMap();
+  final HashSet<FstateKey> _keepAlive = HashSet();
 
-  BehaviorSubject<T> put<T>(FstateKey key, BehaviorSubject<T> newValue) {
+  BehaviorSubject<T> put<T>(FstateKey key, BehaviorSubject<T> newValue,
+      {bool keepAlive = false}) {
     _store[key] = newValue;
+    if (keepAlive) {
+      _keepAlive.add(key);
+    }
     return get(key)!;
   }
 
@@ -27,19 +32,20 @@ class FstateStreamContainer {
   void unregister(FstateKey key) {
     final count = _referenceCounter[key] ?? 0;
 
-    if (count == 0) {
-      throw Exception('Unregistering $key that is not registered');
+    assert(count != 0, 'Unregistering $key that is not registered');
+
+    if (count == 1 && !_keepAlive.contains(key)) {
+      delete(key);
+      return;
     }
 
-    if (count == 1) {
-      _referenceCounter.remove(key);
-      delete(key);
-    } else {
-      _referenceCounter[key] = count - 1;
-    }
+    _referenceCounter[key] = count - 1;
+
+    assert(_referenceCounter[key]! >= 0, 'Reference counter is negative');
   }
 
   void delete(FstateKey key) {
+    _referenceCounter.remove(key);
     _store.remove(key);
   }
 

@@ -41,10 +41,17 @@ class SelectorFactory {
   final String name;
   final String returnType;
 
+  bool get keepAlive =>
+      fstateAnnotationChecker
+          .firstAnnotationOf(element)
+          ?.getField('keepAlive')
+          ?.toBoolValue() ??
+      false;
+
   String generateAnnotation() => generateInjectAnnotation(name, params);
 
   String generateFactory() =>
-      generateStateFactory(name, name, returnType, params);
+      generateStateFactory(name, name, returnType, params, keepAlive);
 
   String generateExtendedSelector() {
     final namedParam = [
