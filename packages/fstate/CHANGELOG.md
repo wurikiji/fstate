@@ -1,3 +1,13 @@
+## 0.8.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: initial value, dispose stream.
+ - **BREAKING** **FEAT**: toggle auto dispose.
+ - **BREAKING** **FEAT**: states are now auto disposed.
+ - **BREAKING** **FEAT**: toggle auto dispose.
+ - **BREAKING** **FEAT**: states are now auto disposed.
+
 ## 0.7.0
 
 > Note: This release has breaking changes.

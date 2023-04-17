@@ -9,12 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fstate: ^0.7.0
+  fstate: ^0.8.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
   build_runner: ^2.3.3
-  fstate_generator: ^0.6.0
+  fstate_generator: ^0.7.0
 flutter:
   uses-material-design: true

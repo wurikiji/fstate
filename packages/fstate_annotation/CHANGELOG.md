@@ -1,3 +1,12 @@
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: downgrade dart dep of annotation package.
+ - **FIX**: downgrade dart dep of annotation package.
+ - **BREAKING** **FEAT**: toggle auto dispose.
+ - **BREAKING** **FEAT**: toggle auto dispose.
+
 ## 0.3.0
 
 > Note: This release has breaking changes.
