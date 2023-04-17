@@ -1,6 +1,6 @@
 name: fstate
 description: Metaprogramming-based dependency injection and state management packages for Flutter.
-version: 0.8.0
+version: 0.8.0+1
 homepage: https://github.com/wurikiji/fstate
 repository: https://github.com/wurikiji/fstate
 

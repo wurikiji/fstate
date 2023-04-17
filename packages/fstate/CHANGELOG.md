@@ -1,3 +1,7 @@
+## 0.8.0+1
+
+ - **FIX**: bugs on stream discard.
+
 ## 0.8.0
 
 > Note: This release has breaking changes.
