@@ -124,10 +124,7 @@ abstract class FstateFactory {
       return derivedState;
     });
 
-    BehaviorSubject mergedSubject = BehaviorSubject()
-      ..addStream(MergeStream([refreshStream, manualSubject]));
-
-    yield* mergedSubject;
+    yield* MergeStream([refreshStream, manualSubject]);
   }
 
   dynamic _constructState(
