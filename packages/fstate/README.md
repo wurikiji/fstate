@@ -45,11 +45,17 @@ but it's cumbersome to implement.
 - [x] State from the selector
 - [x] Family
 - [x] Error/Loading widget builder
-- [ ] Widget life cycle
+- [x] Auto dispose
+- [ ] Observer - "Side-effect" (state lifecycle)
+  - [ ] before init
+  - [ ] after init
+  - [ ] before action
+  - [ ] after action
+  - [ ] before dispose
+  - [ ] after dispose
 - [ ] **Isolate-based**
   - Since v3.7, flutter supports background isolate platform channels. This is a good opportunity to make fstate isolate-based.
 - [ ] Error/Loading Boundary Widget
-- [ ] Observer - "Side-effect"
 - [ ] **Testability**
   - [ ] Overridable state
   - [ ] State only test
