@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:fstate/fstate.dart';
+import 'package:pub_app/detail.dart';
+import 'package:pub_app/pub_repository.dart';
 import 'package:shimmer/shimmer.dart';
 
+part 'package_item.g.dart';
+
+@fwidget
 class PackageItem extends StatelessWidget {
   const PackageItem({
     super.key,
-    required this.name,
-    required this.version,
-    required this.description,
+    @inject$fetchPackageDetails$ required this.package,
     this.onTap,
   });
 
-  final String name;
-  final String version;
-  final String? description;
+  final Package package;
 
   final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final description = this.description;
-
     return ListTile(
       onTap: onTap,
       title: Row(
         children: [
           Expanded(
             child: Text(
-              name,
+              package.name,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Color(0xff0175c2),
@@ -34,10 +34,12 @@ class PackageItem extends StatelessWidget {
               ),
             ),
           ),
-          Text(version),
+          Text(package.latest.version),
         ],
       ),
-      subtitle: description != null ? Text(description) : null,
+      subtitle: package.latest.pubspec.description != null
+          ? Text(package.latest.pubspec.description!)
+          : null,
     );
   }
 }

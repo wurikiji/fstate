@@ -225,21 +225,21 @@ packages:
       path: "../../packages/fstate"
       relative: true
     source: path
-    version: "0.5.0"
+    version: "0.6.0+1"
   fstate_annotation:
     dependency: "direct overridden"
     description:
       path: "../../packages/fstate_annotation"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.2.0+1"
   fstate_generator:
     dependency: "direct dev"
     description:
       path: "../../packages/fstate_generator"
       relative: true
     source: path
-    version: "0.4.0"
+    version: "0.5.0+1"
   glob:
     dependency: transitive
     description:

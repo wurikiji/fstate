@@ -30,26 +30,13 @@ Future<List<SearchPackage>?> searchPackages({
 
 @fstate
 Future<List<Package>> fetchPackages({
-  @inject$searchPackages$ required List<SearchPackage>? searchedPackages,
   @inject$PubRepository required PubRepository pubRepository,
   required int page,
 }) async {
   assert(page > 0, 'page offset starts at 1');
   final token = cancelToken();
 
-  if (searchedPackages == null) {
-    return pubRepository.getPackages(page: page, cancelToken: token);
-  }
-
-  await Future<void>.delayed(const Duration(milliseconds: 250));
-
-  return Future.wait([
-    for (final package in searchedPackages)
-      fetchPackageDetails(
-        packageName: package.package,
-        pubRepository: pubRepository,
-      )
-  ]);
+  return pubRepository.getPackages(page: page, cancelToken: token);
 }
 
 @fwidget
@@ -84,20 +71,34 @@ class SearchPage extends HookWidget {
 
                   final page = index ~/ pageSize + 1;
                   final indexInPage = index % pageSize;
+                  print("Build $index");
                   try {
-                    return $_PackageItemBuilder(
-                      packages: $fetchPackages(
-                        page: page,
-                        searchedPackages: $searchPackages(
-                          page: page,
-                          search: searchController.text,
-                        ),
-                      ),
-                      indexInPage: indexInPage,
-                      $onLoading: (context) {
-                        return PackageItemShimmer();
-                      },
-                    );
+                    return searchController.text.isNotEmpty
+                        ? $SearchList(
+                            packages: $searchPackages(
+                              page: page,
+                              search: searchController.text,
+                            ),
+                            indexInPage: indexInPage,
+                            $onLoading: (context) {
+                              return PackageItemShimmer();
+                            },
+                            $onError: (p0, error) {
+                              return Center(
+                                child: Text('Error $error'),
+                              );
+                            },
+                          )
+                        : $PackageList(
+                            packages: $fetchPackages(page: page),
+                            indexInPage: indexInPage,
+                            $onLoading: (p0) => PackageItemShimmer(),
+                            $onError: (p0, error) {
+                              return Center(
+                                child: Text('Error $error'),
+                              );
+                            },
+                          );
                   } catch (_) {
                     return null;
                   }
@@ -112,8 +113,50 @@ class SearchPage extends HookWidget {
 }
 
 @fwidget
-class _PackageItemBuilder extends StatelessWidget {
-  _PackageItemBuilder({
+class SearchList extends StatelessWidget {
+  SearchList({
+    @inject$searchPackages$ required this.packages,
+    required this.indexInPage,
+  }) : assert(indexInPage < packages.length) {
+    if (indexInPage >= packages.length) {
+      throw 'indexInPage $indexInPage is out of bounds';
+    }
+  }
+
+  final List<SearchPackage> packages;
+  final int indexInPage;
+
+  @override
+  Widget build(BuildContext context) {
+    final package = packages[indexInPage];
+
+    return $PackageItem(
+      package: $fetchPackageDetails(packageName: package.package),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) {
+            return $PackageDetailPage(
+              metrics: $packageMetrics(packageName: package.package),
+              package: $fetchPackageDetails(packageName: package.package),
+              $onLoading: (context) {
+                return const Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+@fwidget
+class PackageList extends StatelessWidget {
+  PackageList({
     @inject$fetchPackages$ required this.packages,
     required this.indexInPage,
   }) : assert(indexInPage < packages.length) {
@@ -129,16 +172,13 @@ class _PackageItemBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     final package = packages[indexInPage];
 
-    return PackageItem(
-      name: package.name,
-      description: package.latest.pubspec.description,
-      version: package.latest.version,
+    return $PackageItem(
+      package: $fetchPackageDetails(packageName: package.name),
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute<void>(
           builder: (context) {
             return $PackageDetailPage(
-              packageName: package.name,
               metrics: $packageMetrics(packageName: package.name),
               package: $fetchPackageDetails(packageName: package.name),
               $onLoading: (context) {

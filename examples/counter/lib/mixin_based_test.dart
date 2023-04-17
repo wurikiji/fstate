@@ -109,12 +109,20 @@ mixin $Counter {
   }
 }
 
-class AAA extends StatelessWidget {
+class CounterWidget extends FstateWidget with $Counter {
+  const CounterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('${counter().value}');
+  }
+}
+
+class AAA extends StatelessWidget with $Counter {
   const AAA({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final counter2 = useCounter(context);
     return Scaffold(
       appBar: AppBar(),
       body: Center(

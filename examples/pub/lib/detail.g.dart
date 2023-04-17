@@ -125,15 +125,14 @@ class $packageMetrics extends FstateFactory {
 
 class $PackageDetailPage extends FstateWidget {
   const $PackageDetailPage(
-      {required this.packageName,
-      required this.package,
+      {required this.package,
       required this.metrics,
       this.pubRepository,
       this.$onLoading,
+      this.$onError,
       Key? key})
       : super(key: key);
 
-  final String packageName;
   final $fetchPackageDetails package;
   final $packageMetrics metrics;
   final $PubRepository? pubRepository;
@@ -141,7 +140,6 @@ class $PackageDetailPage extends FstateWidget {
   @override
   List<Param> get $params => [
         Param.named(#key, key),
-        Param.named(#packageName, packageName),
         Param.named(#package, package),
         Param.named(#metrics, metrics),
         Param.named(#pubRepository, pubRepository ?? $PubRepository())
@@ -155,4 +153,7 @@ class $PackageDetailPage extends FstateWidget {
 
   @override
   final Widget Function(BuildContext)? $onLoading;
+
+  @override
+  final Widget Function(BuildContext, Object? error)? $onError;
 }
