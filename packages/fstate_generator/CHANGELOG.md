@@ -1,3 +1,9 @@
+## 0.6.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: toggle auto dispose.
+
 ## 0.5.0+1
 
  - Update a dependency to the latest release.

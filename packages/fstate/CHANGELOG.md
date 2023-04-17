@@ -1,3 +1,10 @@
+## 0.7.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: toggle auto dispose.
+ - **BREAKING** **FEAT**: states are now auto disposed.
+
 ## 0.6.0+1
 
  - Update a dependency to the latest release.
