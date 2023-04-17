@@ -8,6 +8,7 @@ String generateStateFactory(
   String constructor,
   String stateType,
   List<ParameterMetadata> params,
+  bool keepAlive,
 ) {
   final isSelector = name == constructor;
   final paramNames = params.map((e) => e.name).join(', ');
@@ -32,10 +33,13 @@ class ${name.toFactoryName()} extends FstateFactory {
   Function get \$stateBuilder => $builder${isSelector ? '' : '.new'};
 
   @override
-  List<Param> get \$params => [$fstateParamList];
+  late final List<Param> \$params = [$fstateParamList];
 
   @override
   Map<dynamic, FTransformer> get \$transformers => {};
+
+  @override
+  bool get \$keepAlive => $keepAlive;
 }
 ''';
 }

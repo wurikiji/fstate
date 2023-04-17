@@ -57,6 +57,7 @@ Param<Stream<Param>> calculateFstateFactoryParam(
           : container.put(
               factory.$stateKey,
               factory.createStateStream(container),
+              keepAlive: factory.$keepAlive,
             ))
       .map((event) => paramConstructor(param.key, event));
   return paramConstructor(param.key, value);

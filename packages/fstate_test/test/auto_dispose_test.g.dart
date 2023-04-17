@@ -9,7 +9,7 @@ part of 'auto_dispose_test.dart';
 const inject$Root = Finject(Root, true);
 
 class _$Root implements Root {
-  _$Root({required this.$setNextState}) : _state = Root();
+  _$Root({required this.$setNextState}) : _state = Root.new();
 
   _$Root.from(
     this._state, {
@@ -30,10 +30,13 @@ class $Root extends FstateFactory {
   Function get $stateBuilder => _$Root.new;
 
   @override
-  List<Param> get $params => [];
+  late final List<Param> $params = [];
 
   @override
   Map<dynamic, FTransformer> get $transformers => {};
+
+  @override
+  bool get $keepAlive => false;
 }
 
 extension RootToFstateExtension on Root {
@@ -51,7 +54,7 @@ const inject$Child = Finject(Child, true);
 
 class _$Child implements Child {
   _$Child({required this.$setNextState, required Root root})
-      : _state = Child(root);
+      : _state = Child.new(root);
 
   _$Child.from(
     this._state, {
@@ -77,10 +80,13 @@ class $Child extends FstateFactory {
   Function get $stateBuilder => _$Child.new;
 
   @override
-  List<Param> get $params => [Param.named(#root, root ?? $Root())];
+  late final List<Param> $params = [Param.named(#root, root ?? $Root())];
 
   @override
   Map<dynamic, FTransformer> get $transformers => {};
+
+  @override
+  bool get $keepAlive => false;
 }
 
 extension ChildToFstateExtension on Child {
@@ -98,7 +104,7 @@ const inject$Child2 = Finject(Child2, true);
 
 class _$Child2 implements Child2 {
   _$Child2({required this.$setNextState, required Root root})
-      : _state = Child2(root);
+      : _state = Child2.new(root);
 
   _$Child2.from(
     this._state, {
@@ -124,10 +130,13 @@ class $Child2 extends FstateFactory {
   Function get $stateBuilder => _$Child2.new;
 
   @override
-  List<Param> get $params => [Param.named(#root, root ?? $Root())];
+  late final List<Param> $params = [Param.named(#root, root ?? $Root())];
 
   @override
   Map<dynamic, FTransformer> get $transformers => {};
+
+  @override
+  bool get $keepAlive => false;
 }
 
 extension Child2ToFstateExtension on Child2 {
@@ -141,15 +150,62 @@ extension Child2ToFstateExtension on Child2 {
   }
 }
 
+const inject$KeepAliveState = Finject(KeepAliveState, true);
+
+class _$KeepAliveState implements KeepAliveState {
+  _$KeepAliveState({required this.$setNextState})
+      : _state = KeepAliveState.new();
+
+  _$KeepAliveState.from(
+    this._state, {
+    required this.$setNextState,
+  });
+
+  final void Function(KeepAliveState) $setNextState;
+  final KeepAliveState _state;
+}
+
+class $KeepAliveState extends FstateFactory {
+  $KeepAliveState()
+      : $stateKey = FstateKey('KeepAliveState', [KeepAliveState.new]);
+
+  @override
+  final FstateKey $stateKey;
+
+  @override
+  Function get $stateBuilder => _$KeepAliveState.new;
+
+  @override
+  late final List<Param> $params = [];
+
+  @override
+  Map<dynamic, FTransformer> get $transformers => {};
+
+  @override
+  bool get $keepAlive => true;
+}
+
+extension KeepAliveStateToFstateExtension on KeepAliveState {
+  DerivedFstateBuilder toFstate() {
+    return DerivedFstateBuilder(
+      ($setNextState) => _$KeepAliveState.from(
+        this,
+        $setNextState: $setNextState,
+      ),
+    );
+  }
+}
+
 // **************************************************************************
 // WidgetGenerator
 // **************************************************************************
 
 class $TestWidget extends FstateWidget {
-  const $TestWidget(
+  $TestWidget(
       {this.child,
       this.child2,
       this.root,
+      this.keepAliveState,
       this.$onLoading,
       this.$onError,
       Key? key})
@@ -158,14 +214,16 @@ class $TestWidget extends FstateWidget {
   final $Child? child;
   final $Child2? child2;
   final $Root? root;
+  final $KeepAliveState? keepAliveState;
 
   @override
-  List<Param> get $params => [
-        Param.named(#key, key),
-        Param.named(#child, child ?? $Child()),
-        Param.named(#child2, child2 ?? $Child2()),
-        Param.named(#root, root ?? $Root())
-      ];
+  late final List<Param> $params = [
+    Param.named(#key, key),
+    Param.named(#child, child ?? $Child()),
+    Param.named(#child2, child2 ?? $Child2()),
+    Param.named(#root, root ?? $Root()),
+    Param.named(#keepAliveState, keepAliveState ?? $KeepAliveState())
+  ];
 
   @override
   Map<dynamic, FTransformer> get $transformers => {};

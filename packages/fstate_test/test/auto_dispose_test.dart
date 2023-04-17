@@ -29,7 +29,7 @@ void main() {
       expect(container.contains(child2.$stateKey), isFalse);
     });
     testWidgets('on widget', (widgetTester) async {
-      const widget = FstateScope(child: $TestWidget());
+      final widget = FstateScope(child: $TestWidget());
       await widgetTester.pumpWidget(widget);
       await widgetTester.pumpAndSettle();
 
@@ -40,14 +40,17 @@ void main() {
       final root = $Root();
       final child = $Child();
       final child2 = $Child2();
+      final keepAlive = $KeepAliveState();
       expect(container.contains(root.$stateKey), isTrue);
       expect(container.contains(child.$stateKey), isTrue);
       expect(container.contains(child2.$stateKey), isTrue);
+      expect(container.contains(keepAlive.$stateKey), isTrue);
 
       await widgetTester.pumpWidget(const SizedBox.shrink());
       expect(container.contains(root.$stateKey), isFalse);
       expect(container.contains(child.$stateKey), isFalse);
       expect(container.contains(child2.$stateKey), isFalse);
+      expect(container.contains(keepAlive.$stateKey), isTrue);
     });
   });
 }
@@ -71,6 +74,9 @@ class Child2 {
   final Root root;
 }
 
+@Fstate(keepAlive: true)
+class KeepAliveState {}
+
 @fwidget
 class TestWidget extends StatelessWidget {
   const TestWidget({
@@ -78,11 +84,13 @@ class TestWidget extends StatelessWidget {
     @inject$Child required this.child,
     @inject$Child2 required this.child2,
     @inject$Root required this.root,
+    @inject$KeepAliveState required this.keepAliveState,
   });
 
   final Root root;
   final Child child;
   final Child2 child2;
+  final KeepAliveState keepAliveState;
 
   @override
   Widget build(BuildContext context) {
