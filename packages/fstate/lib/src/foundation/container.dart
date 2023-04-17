@@ -45,7 +45,10 @@ class FstateStreamContainer {
   }
 
   void delete(FstateKey key) {
+    final subject = _store[key];
+    assert(subject != null, 'Deleting $key that is not in the container');
     _referenceCounter.remove(key);
+    subject!.close();
     _store.remove(key);
   }
 

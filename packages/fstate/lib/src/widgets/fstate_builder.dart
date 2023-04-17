@@ -58,7 +58,7 @@ class _FstateWidgetState extends State<FstateWidget> {
   Stream _buildStream() {
     final deps = widget.$params.where((e) => e.value is FstateFactory);
     if (deps.isEmpty) {
-      return Stream.value(0);
+      return BehaviorSubject.seeded([]);
     }
     final builtDeps = deps.map(
       (e) => calculateFstateFactoryParam(

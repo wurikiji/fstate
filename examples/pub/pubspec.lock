@@ -197,10 +197,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "7d328c4d898a61efc3cd93655a0955858e29a0aa647f0f9e02d59b3bb275e2e8"
+      sha256: "0894a098594263fe1caaba3520e3016d8a855caeb010a882273189cca10f11e9"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "5.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -281,21 +281,21 @@ packages:
       path: "../../packages/fstate"
       relative: true
     source: path
-    version: "0.6.0+1"
+    version: "0.7.0"
   fstate_annotation:
     dependency: "direct overridden"
     description:
       path: "../../packages/fstate_annotation"
       relative: true
     source: path
-    version: "0.2.0+1"
+    version: "0.3.0"
   fstate_generator:
     dependency: "direct dev"
     description:
       path: "../../packages/fstate_generator"
       relative: true
     source: path
-    version: "0.5.0+1"
+    version: "0.6.0"
   glob:
     dependency: transitive
     description:
