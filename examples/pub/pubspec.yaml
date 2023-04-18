@@ -14,7 +14,7 @@ dependencies:
   flutter_hooks: ^0.18.0
   flutter_svg: ^1.1.4
   freezed_annotation: ^2.1.0
-  fstate: ^0.8.0+1
+  fstate: ^0.8.0+2
   html: ^0.15.0
   json_annotation: ^4.6.0
   pubspec_parse: ^1.2.1
@@ -27,7 +27,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^2.1.0
-  fstate_generator: ^0.7.0
+  fstate_generator: ^0.7.0+1
   json_serializable: ^6.3.0
   mockito: ^5.0.0
 

@@ -1,3 +1,7 @@
+## 0.7.0+1
+
+ - **REFACTOR**: const fstate widget.
+
 ## 0.7.0
 
 > Note: This release has breaking changes.

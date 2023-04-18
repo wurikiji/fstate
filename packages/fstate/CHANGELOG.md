@@ -1,3 +1,7 @@
+## 0.8.0+2
+
+ - **REFACTOR**: const fstate widget.
+
 ## 0.8.0+1
 
  - **FIX**: bugs on stream discard.
