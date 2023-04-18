@@ -34,7 +34,7 @@ class DerivedFstateBuilder {
 }
 
 /// An abstract factory to create a key and a fstate
-abstract class FstateFactory {
+abstract class FstateFactory<T> {
   FstateFactory();
 
   /// FstateKey builder
@@ -55,8 +55,8 @@ abstract class FstateFactory {
   bool _needUnregister = false;
 
   /// A method to build a fstate
-  BehaviorSubject createStateStream(FstateStreamContainer container) {
-    final subject = BehaviorSubject()
+  BehaviorSubject<T> createStateStream(FstateStreamContainer container) {
+    final subject = BehaviorSubject<T>()
       ..addStream(
         _createStateStream(container).distinctUnique(),
       );
@@ -83,10 +83,10 @@ abstract class FstateFactory {
     _needUnregister = false;
   }
 
-  Stream _createStateStream(FstateStreamContainer container) async* {
+  Stream<T> _createStateStream(FstateStreamContainer container) async* {
     final manualInputs = $params.where((e) => e.value is! FstateFactory);
     final deps = $params.where((e) => e.value is FstateFactory);
-    final manualSubject = BehaviorSubject();
+    final manualSubject = BehaviorSubject<T>();
 
     if (deps.isEmpty) {
       final firstState = await _constructState(manualInputs, (state) {
@@ -115,7 +115,7 @@ abstract class FstateFactory {
     _needUnregister = true;
 
     final refreshStream =
-        CombineLatestStream.list(builtDeps).asyncMap((e) async {
+        CombineLatestStream.list(builtDeps).asyncMap<T>((e) async {
       final derivedState =
           await _constructState([...manualInputs, ...e], (state) {
         manualSubject.add(state);

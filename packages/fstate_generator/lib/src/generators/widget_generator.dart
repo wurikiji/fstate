@@ -44,12 +44,12 @@ this.\$onLoading, this.\$onError, Key? key
 
       return '''
 class ${name.toWidgetName()} extends FstateWidget {
-  ${name.toWidgetName()}($factoryParams) : super(key: key);
+  const ${name.toWidgetName()}($factoryParams) : super(key: key);
 
   $fields
 
   @override
-  late final List<Param> \$params = [
+  List<Param> get \$params => [
     ${constructor.params.toFwidgetParamList()}
   ];
 

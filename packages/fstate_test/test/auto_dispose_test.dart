@@ -29,7 +29,7 @@ void main() {
       expect(container.contains(child2.$stateKey), isFalse);
     });
     testWidgets('on widget', (widgetTester) async {
-      final widget = FstateScope(child: $TestWidget());
+      const widget = FstateScope(child: $TestWidget());
       await widgetTester.pumpWidget(widget);
       await widgetTester.pumpAndSettle();
 

@@ -201,7 +201,7 @@ extension KeepAliveStateToFstateExtension on KeepAliveState {
 // **************************************************************************
 
 class $TestWidget extends FstateWidget {
-  $TestWidget(
+  const $TestWidget(
       {this.child,
       this.child2,
       this.root,
@@ -217,13 +217,13 @@ class $TestWidget extends FstateWidget {
   final $KeepAliveState? keepAliveState;
 
   @override
-  late final List<Param> $params = [
-    Param.named(#key, key),
-    Param.named(#child, child ?? $Child()),
-    Param.named(#child2, child2 ?? $Child2()),
-    Param.named(#root, root ?? $Root()),
-    Param.named(#keepAliveState, keepAliveState ?? $KeepAliveState())
-  ];
+  List<Param> get $params => [
+        Param.named(#key, key),
+        Param.named(#child, child ?? $Child()),
+        Param.named(#child2, child2 ?? $Child2()),
+        Param.named(#root, root ?? $Root()),
+        Param.named(#keepAliveState, keepAliveState ?? $KeepAliveState())
+      ];
 
   @override
   Map<dynamic, FTransformer> get $transformers => {};

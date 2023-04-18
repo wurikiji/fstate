@@ -233,7 +233,7 @@ packages:
       path: "../fstate"
       relative: true
     source: path
-    version: "0.8.0"
+    version: "0.8.0+1"
   fstate_annotation:
     dependency: "direct overridden"
     description:

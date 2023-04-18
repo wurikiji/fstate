@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fstate/fstate.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,7 +23,14 @@ abstract class FstateWidget extends StatefulWidget {
 class _FstateWidgetState extends State<FstateWidget> {
   FstateStreamContainer? container;
   late Stream refreshStream;
-  bool _needUnregister = false;
+  bool needUnregister = false;
+  List<Param> params = [];
+
+  @override
+  void initState() {
+    super.initState();
+    params = widget.$params;
+  }
 
   @override
   void didChangeDependencies() {
@@ -35,28 +43,29 @@ class _FstateWidgetState extends State<FstateWidget> {
       return;
     }
     if (container != oldContainer) {
-      _needUnregister = false;
+      _unregisterDepdencies(oldContainer, params, true);
       refreshStream = _buildStream();
-      _unregisterDepdencies(oldContainer, widget.$params, true);
     }
   }
 
   @override
   void didUpdateWidget(covariant FstateWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.$params != oldWidget.$params) {
+    if (!listEquals(params, widget.$params)) {
+      _unregisterDepdencies(container!, params);
+      params = widget.$params;
       refreshStream = _buildStream();
     }
   }
 
   @override
   void dispose() {
-    _unregisterDepdencies(container!, widget.$params);
+    _unregisterDepdencies(container!, params);
     super.dispose();
   }
 
   Stream _buildStream() {
-    final deps = widget.$params.where((e) => e.value is FstateFactory);
+    final deps = params.where((e) => e.value is FstateFactory);
     if (deps.isEmpty) {
       return BehaviorSubject.seeded([]);
     }
@@ -71,8 +80,8 @@ class _FstateWidgetState extends State<FstateWidget> {
         },
       ),
     );
-    _unregisterDepdencies(container!, widget.$params);
-    _needUnregister = true;
+    _unregisterDepdencies(container!, params);
+    needUnregister = true;
 
     return BehaviorSubject()
       ..addStream(CombineLatestStream.list(builtDeps.map((e) {
@@ -84,7 +93,7 @@ class _FstateWidgetState extends State<FstateWidget> {
   @override
   Widget build(BuildContext context) {
     final manualInputs =
-        widget.$params.where((e) => e.value is! FstateFactory).toList();
+        params.where((e) => e.value is! FstateFactory).toList();
     return StreamBuilder(
       stream: refreshStream.distinctUnique(),
       builder: (context, deps) {
@@ -109,14 +118,14 @@ class _FstateWidgetState extends State<FstateWidget> {
   void _unregisterDepdencies(
       FstateStreamContainer container, List<Param> params,
       [bool force = false]) {
-    if (!_needUnregister && !force) return;
+    if (!needUnregister && !force) return;
     final deps = params
         .where((e) => e.value is FstateFactory)
         .map((e) => e.value as FstateFactory);
     for (final dep in deps) {
       dep.unregister(container);
     }
-    _needUnregister = false;
+    needUnregister = false;
   }
 
   Widget _constructWidget(List<Param> params) {
